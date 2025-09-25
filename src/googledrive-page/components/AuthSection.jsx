@@ -4,17 +4,13 @@ import apiFetch from '@wordpress/api-fetch';
 import '../scss/components/AuthSection.scss';
 
 const AuthSection = ({ onAuth, onDisconnect, isAuthenticated, isLoading }) => {
-	const [isAuthenticating, setIsAuthenticating] = useState(false);
 	const [isDisconnecting, setIsDisconnecting] = useState(false);
 
 	const handleAuth = async () => {
-		setIsAuthenticating(true);
 		try {
 			await onAuth();
 		} catch (err) {
 			console.error('Auth error:', err);
-		} finally {
-			setIsAuthenticating(false);
 		}
 	};
 
@@ -98,19 +94,10 @@ const AuthSection = ({ onAuth, onDisconnect, isAuthenticated, isLoading }) => {
 								<button
 									className="sui-button sui-button-blue sui-button-lg"
 									onClick={handleAuth}
-									disabled={isAuthenticating || isLoading}
+									disabled={isLoading}
 								>
-									{isAuthenticating ? (
-										<>
-											<span className="sui-icon-loader sui-loading" aria-hidden="true"></span>
-											{__('Authenticating...', 'wpmudev-plugin-test')}
-										</>
-									) : (
-										<>
-											<span className="sui-icon-cloud" aria-hidden="true"></span>
-											{__('Authenticate with Google', 'wpmudev-plugin-test')}
-										</>
-									)}
+									<span className="sui-icon-cloud" aria-hidden="true"></span>
+									{__('Authenticate with Google', 'wpmudev-plugin-test')}
 								</button>
 							</div>
 						</div>

@@ -48,30 +48,8 @@ const GoogleDriveTestApp = () => {
 			});
 
 			if (response.auth_url) {
-				// Try multiple methods to open the authentication URL
-				try {
-					// Method 1: Try opening in a new window/tab
-					const authWindow = window.open(response.auth_url, 'google_auth', 'width=600,height=700,scrollbars=yes,resizable=yes');
-					
-					if (!authWindow || authWindow.closed || typeof authWindow.closed === 'undefined') {
-						// Method 2: If popup blocked, redirect current window
-						console.warn('Popup blocked, redirecting current window');
-						window.location.href = response.auth_url;
-					} else {
-						// Method 3: Monitor popup for completion
-						const checkClosed = setInterval(() => {
-							if (authWindow.closed) {
-								clearInterval(checkClosed);
-								// Reload page to check authentication status
-								window.location.reload();
-							}
-						}, 1000);
-					}
-				} catch (popupError) {
-					// Method 4: Fallback to direct redirect
-					console.warn('Popup failed, using direct redirect:', popupError);
-					window.location.href = response.auth_url;
-				}
+				// Direct redirect to Google OAuth - no popup
+				window.location.href = response.auth_url;
 			} else {
 				console.error('No auth URL received');
 			}
