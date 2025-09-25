@@ -107,6 +107,25 @@ const GoogleDriveTestApp = () => {
 		loadFiles();
 	};
 
+	const handleDisconnect = async () => {
+		try {
+			const response = await apiFetch({
+				path: wpmudevDriveTest.restEndpointDisconnect,
+				method: 'POST',
+			});
+
+			if (response.success) {
+				setIsAuthenticated(false);
+				setFiles([]);
+				setError('');
+				// Show success message
+				console.log(response.message);
+			}
+		} catch (err) {
+			setError(err.message || __('Failed to disconnect from Google Drive', 'wpmudev-plugin-test'));
+		}
+	};
+
 	useEffect(() => {
 		loadFiles();
 	}, [loadFiles]);
@@ -143,6 +162,7 @@ const GoogleDriveTestApp = () => {
 					<div className="sui-col-md-6">
 						<AuthSection
 							onAuth={handleAuth}
+							onDisconnect={handleDisconnect}
 							isAuthenticated={isAuthenticated}
 							isLoading={isLoading}
 						/>

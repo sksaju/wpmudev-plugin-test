@@ -65,3 +65,5 @@
 - **Component Architecture**: Refactored all React components to use WordPress's built-in React hooks and utilities
 - **Build Process**: Enhanced build pipeline to generate production-ready assets with correct dependencies
 - **Package Optimization**: Further reduced final package size to 912KB through dependency cleanup
+- **Disconnect Feature**: Added complete disconnect functionality with token revocation and user confirmation
+- **Enhanced Credentials Form**: Improved form validation, instructions, and user experience with better error handling

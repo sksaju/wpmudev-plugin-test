@@ -135,6 +135,15 @@ class Drive_API extends Base {
 				),
 			),
 		) );
+
+		// Disconnect/Revoke access
+		register_rest_route( 'wpmudev/v1/drive', '/disconnect', array(
+			'methods'             => 'POST',
+			'callback'            => array( $this, 'disconnect' ),
+			'permission_callback' => function () {
+				return current_user_can( 'manage_options' );
+			},
+		) );
 	}
 
 	/**
@@ -509,6 +518,62 @@ class Drive_API extends Base {
 
 		} catch ( Exception $e ) {
 			return new WP_Error( 'create_error', $e->getMessage(), array( 'status' => 500 ) );
+		}
+	}
+
+	/**
+	 * Disconnect from Google Drive and revoke access.
+	 *
+	 * @param WP_REST_Request $request
+	 * @return WP_REST_Response|WP_Error
+	 */
+	public function disconnect( WP_REST_Request $request ) {
+		try {
+			$tokens = get_option( 'wpmudev_plugin_tests_tokens', array() );
+			
+			if ( empty( $tokens['access_token'] ) ) {
+				return new WP_Error( 'no_tokens', __( 'No active connection found', 'wpmudev-plugin-test' ), array( 'status' => 400 ) );
+			}
+
+			// Revoke the access token with Google
+			$revoke_url = add_query_arg( array(
+				'token' => $tokens['access_token'],
+			), 'https://oauth2.googleapis.com/revoke' );
+
+			$response = wp_remote_post( $revoke_url, array(
+				'timeout' => 30,
+				'headers' => array(
+					'Content-Type' => 'application/x-www-form-urlencoded',
+				),
+			) );
+
+			// Clear stored tokens regardless of revoke response
+			delete_option( 'wpmudev_plugin_tests_tokens' );
+			delete_transient( 'wpmudev_drive_auth_state' );
+
+			// Log the revoke attempt
+			if ( is_wp_error( $response ) ) {
+				error_log( 'Google Drive disconnect: Failed to revoke token - ' . $response->get_error_message() );
+			} else {
+				$response_code = wp_remote_retrieve_response_code( $response );
+				if ( $response_code === 200 ) {
+					error_log( 'Google Drive disconnect: Token revoked successfully' );
+				} else {
+					error_log( 'Google Drive disconnect: Token revoke returned code ' . $response_code );
+				}
+			}
+
+			return new WP_REST_Response( array(
+				'success' => true,
+				'message' => __( 'Successfully disconnected from Google Drive', 'wpmudev-plugin-test' ),
+			) );
+
+		} catch ( Exception $e ) {
+			// Even if revoke fails, clear local tokens
+			delete_option( 'wpmudev_plugin_tests_tokens' );
+			delete_transient( 'wpmudev_drive_auth_state' );
+			
+			return new WP_Error( 'disconnect_error', $e->getMessage(), array( 'status' => 500 ) );
 		}
 	}
 }
