@@ -219,16 +219,34 @@ class Drive_API extends Base {
 		$error = $request->get_param( 'error' );
 
 		if ( ! empty( $error ) ) {
-			return new WP_Error( 'oauth_error', __( 'OAuth error: ', 'wpmudev-plugin-test' ) . $error, array( 'status' => 400 ) );
+			$redirect_url = add_query_arg( array(
+				'page' => 'wpmudev-plugin-test-googledrive',
+				'google_auth' => 'error',
+				'error_message' => urlencode( $error ),
+			), admin_url( 'admin.php' ) );
+			wp_redirect( $redirect_url );
+			exit;
 		}
 
 		$stored_state = get_transient( 'wpmudev_drive_auth_state' );
 		if ( $state !== $stored_state ) {
-			return new WP_Error( 'invalid_state', __( 'Invalid state parameter', 'wpmudev-plugin-test' ), array( 'status' => 400 ) );
+			$redirect_url = add_query_arg( array(
+				'page' => 'wpmudev-plugin-test-googledrive',
+				'google_auth' => 'error',
+				'error_message' => urlencode( __( 'Invalid state parameter', 'wpmudev-plugin-test' ) ),
+			), admin_url( 'admin.php' ) );
+			wp_redirect( $redirect_url );
+			exit;
 		}
 
 		if ( empty( $code ) ) {
-			return new WP_Error( 'no_code', __( 'No authorization code received', 'wpmudev-plugin-test' ), array( 'status' => 400 ) );
+			$redirect_url = add_query_arg( array(
+				'page' => 'wpmudev-plugin-test-googledrive',
+				'google_auth' => 'error',
+				'error_message' => urlencode( __( 'No authorization code received', 'wpmudev-plugin-test' ) ),
+			), admin_url( 'admin.php' ) );
+			wp_redirect( $redirect_url );
+			exit;
 		}
 
 		$auth_creds = get_option( 'wpmudev_plugin_tests_auth', array() );
@@ -245,13 +263,25 @@ class Drive_API extends Base {
 		) );
 
 		if ( is_wp_error( $token_response ) ) {
-			return new WP_Error( 'token_error', $token_response->get_error_message(), array( 'status' => 500 ) );
+			$redirect_url = add_query_arg( array(
+				'page' => 'wpmudev-plugin-test-googledrive',
+				'google_auth' => 'error',
+				'error_message' => urlencode( $token_response->get_error_message() ),
+			), admin_url( 'admin.php' ) );
+			wp_redirect( $redirect_url );
+			exit;
 		}
 
 		$token_data = json_decode( wp_remote_retrieve_body( $token_response ), true );
 
 		if ( isset( $token_data['error'] ) ) {
-			return new WP_Error( 'token_error', $token_data['error_description'], array( 'status' => 500 ) );
+			$redirect_url = add_query_arg( array(
+				'page' => 'wpmudev-plugin-test-googledrive',
+				'google_auth' => 'error',
+				'error_message' => urlencode( $token_data['error_description'] ?? $token_data['error'] ),
+			), admin_url( 'admin.php' ) );
+			wp_redirect( $redirect_url );
+			exit;
 		}
 
 		// Store tokens
@@ -264,10 +294,14 @@ class Drive_API extends Base {
 		// Clean up state
 		delete_transient( 'wpmudev_drive_auth_state' );
 
-		return new WP_REST_Response( array(
-			'success' => true,
-			'message' => __( 'Successfully authenticated with Google Drive', 'wpmudev-plugin-test' ),
-		) );
+		// Redirect back to admin page with success message
+		$redirect_url = add_query_arg( array(
+			'page' => 'wpmudev-plugin-test-googledrive',
+			'google_auth' => 'success',
+		), admin_url( 'admin.php' ) );
+
+		wp_redirect( $redirect_url );
+		exit;
 	}
 
 	/**

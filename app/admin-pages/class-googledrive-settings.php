@@ -85,6 +85,7 @@ class Google_Drive extends Base {
 
 		add_action( 'admin_menu', array( $this, 'register_admin_page' ) );
 		add_action( 'admin_enqueue_scripts', array( $this, 'enqueue_assets' ) );
+		add_action( 'admin_notices', array( $this, 'show_auth_notices' ) );
 		// Add body class to admin pages.
 		add_filter( 'admin_body_class', array( $this, 'admin_body_classes' ) );
 	}
@@ -235,6 +236,30 @@ class Google_Drive extends Base {
 	 */
 	protected function view() {
 		echo '<div id="' . esc_attr( $this->unique_id ) . '" class="sui-wrap"></div>';
+	}
+
+	/**
+	 * Show authentication notices.
+	 *
+	 * @return void
+	 */
+	public function show_auth_notices() {
+		if ( ! isset( $_GET['page'] ) || $_GET['page'] !== $this->page_slug ) {
+			return;
+		}
+
+		if ( isset( $_GET['google_auth'] ) ) {
+			if ( $_GET['google_auth'] === 'success' ) {
+				echo '<div class="notice notice-success is-dismissible"><p>' . 
+					esc_html__( 'Successfully authenticated with Google Drive!', 'wpmudev-plugin-test' ) . 
+					'</p></div>';
+			} elseif ( $_GET['google_auth'] === 'error' && isset( $_GET['error_message'] ) ) {
+				echo '<div class="notice notice-error is-dismissible"><p>' . 
+					esc_html__( 'Authentication failed: ', 'wpmudev-plugin-test' ) . 
+					esc_html( urldecode( $_GET['error_message'] ) ) . 
+					'</p></div>';
+			}
+		}
 	}
 
 	/**
