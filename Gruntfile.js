@@ -22,11 +22,53 @@ module.exports = function (grunt) {
 		'tests/**',
 	]
 
-    const excludeCopyFilesPro = copyFiles
-		.slice(0)
-		.concat([
-			'changelog.txt',
-		])
+    const excludeCopyFilesPro = [
+        // Core plugin runtime files only
+        'app/**',
+        'core/**',
+        'languages/**',
+        'assets/**',
+        'wpmudev-plugin-test.php',
+        'uninstall.php',
+        'composer.json',
+        'composer.lock',
+        // Include only essential vendor files - exclude massive Google services
+        'vendor/autoload.php',
+        'vendor/composer/**',
+        'vendor/google/apiclient/**',
+        'vendor/google/auth/**',
+        'vendor/guzzlehttp/**',
+        'vendor/monolog/**',
+        'vendor/paragonie/**',
+        'vendor/psr/**',
+        'vendor/ralouphie/**',
+        'vendor/symfony/**',
+        // Exclude massive Google API services (121MB!) - we only need Drive
+        '!vendor/google/apiclient-services/**',
+        // Exclude all dev dependencies
+        '!vendor/dealerdirect/**',
+        '!vendor/firebase/**',
+        '!vendor/phpcompatibility/**',
+        '!vendor/phpcsstandards/**',
+        '!vendor/phpseclib/**',
+        '!vendor/squizlabs/**',
+        '!vendor/wp-coding-standards/**',
+        '!vendor/bin/**',
+        // Explicitly exclude development-related sources from final build
+        '!node_modules/**',
+        '!src/**',
+        '!tests/**',
+        '!*.md',
+        '!README.md',
+        '!QUESTIONS.md',
+        '!Gruntfile.js',
+        '!webpack.config.js',
+        '!phpcs.ruleset.xml',
+        '!phpunit.xml.dist',
+        '!gulpfile.js',
+        '!changelog.txt',
+        '!.babelrc',
+    ]
 
 	const changelog = grunt.file.read('.changelog')
 

@@ -19,8 +19,7 @@
 		}
 	],
 	"require": {
-		"php": ">=7.4",
-		"google/apiclient": "^2.15"
+		"php": ">=7.4"
 	},
 	"require-dev": {
 		"wp-coding-standards/wpcs": "^3.0",
@@ -28,12 +27,6 @@
 		"phpcompatibility/phpcompatibility-wp": "^2.1"
 	},
 	"scripts": {
-		"post-install-cmd": [
-			"Google_Task_Composer::cleanup"
-		],
-		"post-update-cmd": [
-			"Google_Task_Composer::cleanup"
-		]
 	},
 	"autoload": {
         "classmap": ["core/", "app/"]

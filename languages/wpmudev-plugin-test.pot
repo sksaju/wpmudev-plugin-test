@@ -9,9 +9,9 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2025-08-28T16:10:12+00:00\n"
+"POT-Creation-Date: 2025-09-25T22:17:01+00:00\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
-"X-Generator: WP-CLI 2.12.0\n"
+"X-Generator: WP-CLI 2.11.0\n"
 
 #. Plugin Name of the plugin
 #: wpmudev-plugin-test.php
@@ -29,5 +29,292 @@ msgid "PLEASE ADD YOU FULL NAME HERE"
 msgstr ""
 
 #: app/admin-pages/class-googledrive-settings.php:81
+#: app/admin-pages/class-googledrive-settings.php:155
 msgid "Google Drive Test"
+msgstr ""
+
+#: app/admin-pages/class-posts-maintenance-page.php:18
+#: app/admin-pages/class-posts-maintenance-page.php:19
+#: app/admin-pages/class-posts-maintenance-page.php:38
+msgid "Posts Maintenance"
+msgstr ""
+
+#: app/admin-pages/class-posts-maintenance-page.php:32
+msgid "Scan started in background."
+msgstr ""
+
+#: app/admin-pages/class-posts-maintenance-page.php:41
+msgid "Select post types to scan:"
+msgstr ""
+
+#: app/admin-pages/class-posts-maintenance-page.php:45
+msgid "Scan Posts"
+msgstr ""
+
+#: app/admin-pages/class-posts-maintenance-page.php:48
+msgid "Progress"
+msgstr ""
+
+#: app/endpoints/v1/class-googledrive-rest.php:151
+msgid "Client ID and Client Secret are required"
+msgstr ""
+
+#: app/endpoints/v1/class-googledrive-rest.php:163
+msgid "Credentials saved successfully"
+msgstr ""
+
+#: app/endpoints/v1/class-googledrive-rest.php:177
+msgid "Please save your Google Drive credentials first"
+msgstr ""
+
+#: app/endpoints/v1/class-googledrive-rest.php:197
+msgid "Opening Google authentication in a new window. If blocked, please check your browser settings."
+msgstr ""
+
+#: app/endpoints/v1/class-googledrive-rest.php:213
+msgid "OAuth error: "
+msgstr ""
+
+#: app/endpoints/v1/class-googledrive-rest.php:218
+msgid "Invalid state parameter"
+msgstr ""
+
+#: app/endpoints/v1/class-googledrive-rest.php:222
+msgid "No authorization code received"
+msgstr ""
+
+#: app/endpoints/v1/class-googledrive-rest.php:260
+msgid "Successfully authenticated with Google Drive"
+msgstr ""
+
+#: app/endpoints/v1/class-googledrive-rest.php:316
+#: app/endpoints/v1/class-googledrive-rest.php:369
+#: app/endpoints/v1/class-googledrive-rest.php:434
+#: app/endpoints/v1/class-googledrive-rest.php:474
+msgid "Not authenticated with Google Drive"
+msgstr ""
+
+#: app/endpoints/v1/class-googledrive-rest.php:374
+msgid "No file uploaded"
+msgstr ""
+
+#: app/endpoints/v1/class-googledrive-rest.php:418
+msgid "File uploaded successfully"
+msgstr ""
+
+#: app/endpoints/v1/class-googledrive-rest.php:507
+msgid "Folder created successfully"
+msgstr ""
+
+#: assets/js/drivetestpage.min.js:337
+msgid "Credentials saved successfully!"
+msgstr ""
+
+#: assets/js/drivetestpage.min.js:340
+msgid "Failed to save credentials"
+msgstr ""
+
+#: assets/js/drivetestpage.min.js:352
+msgid "Google Drive Credentials"
+msgstr ""
+
+#: assets/js/drivetestpage.min.js:357
+msgid "Configured"
+msgstr ""
+
+#: assets/js/drivetestpage.min.js:386
+msgid "Client ID"
+msgstr ""
+
+#: assets/js/drivetestpage.min.js:394
+msgid "Enter your Google Client ID"
+msgstr ""
+
+#: assets/js/drivetestpage.min.js:398
+msgid "Get this from Google Cloud Console"
+msgstr ""
+
+#: assets/js/drivetestpage.min.js:403
+msgid "Client Secret"
+msgstr ""
+
+#: assets/js/drivetestpage.min.js:411
+msgid "Enter your Google Client Secret"
+msgstr ""
+
+#: assets/js/drivetestpage.min.js:415
+msgid "Keep this secure and private"
+msgstr ""
+
+#: assets/js/drivetestpage.min.js:427
+msgid "Saving..."
+msgstr ""
+
+#: assets/js/drivetestpage.min.js:432
+msgid "Save Credentials"
+msgstr ""
+
+#: assets/js/drivetestpage.min.js:499
+msgid "Authentication"
+msgstr ""
+
+#: assets/js/drivetestpage.min.js:504
+msgid "Connected"
+msgstr ""
+
+#: assets/js/drivetestpage.min.js:516
+msgid "Successfully authenticated with Google Drive!"
+msgstr ""
+
+#: assets/js/drivetestpage.min.js:522
+msgid "You can now upload files, create folders, and manage your Google Drive content."
+msgstr ""
+
+#: assets/js/drivetestpage.min.js:532
+msgid "Connect to Google Drive"
+msgstr ""
+
+#: assets/js/drivetestpage.min.js:534
+msgid "Click the button below to authenticate with Google Drive and start managing your files."
+msgstr ""
+
+#: assets/js/drivetestpage.min.js:544
+msgid "Authenticating..."
+msgstr ""
+
+#: assets/js/drivetestpage.min.js:549
+msgid "Authenticate with Google"
+msgstr ""
+
+#: assets/js/drivetestpage.min.js:637
+msgid "File uploaded successfully!"
+msgstr ""
+
+#: assets/js/drivetestpage.min.js:647
+msgid "Failed to upload file"
+msgstr ""
+
+#: assets/js/drivetestpage.min.js:666
+msgid "Upload File to Drive"
+msgstr ""
+
+#: assets/js/drivetestpage.min.js:704
+msgid "Choose File to Upload"
+msgstr ""
+
+#: assets/js/drivetestpage.min.js:705
+msgid "Click to browse or drag and drop files here"
+msgstr ""
+
+#: assets/js/drivetestpage.min.js:757
+msgid "Uploading..."
+msgstr ""
+
+#: assets/js/drivetestpage.min.js:762
+msgid "Upload File"
+msgstr ""
+
+#: assets/js/drivetestpage.min.js:830
+msgid "Folder created successfully!"
+msgstr ""
+
+#: assets/js/drivetestpage.min.js:838
+msgid "Failed to create folder"
+msgstr ""
+
+#: assets/js/drivetestpage.min.js:850
+msgid "Create New Folder"
+msgstr ""
+
+#: assets/js/drivetestpage.min.js:882
+msgid "Folder Name"
+msgstr ""
+
+#: assets/js/drivetestpage.min.js:890
+msgid "Enter folder name"
+msgstr ""
+
+#: assets/js/drivetestpage.min.js:895
+msgid "Choose a descriptive name for your new folder"
+msgstr ""
+
+#: assets/js/drivetestpage.min.js:908
+msgid "Creating..."
+msgstr ""
+
+#: assets/js/drivetestpage.min.js:913
+msgid "Create Folder"
+msgstr ""
+
+#: assets/js/drivetestpage.min.js:1023
+msgid "Folder"
+msgstr ""
+
+#: assets/js/drivetestpage.min.js:1023
+msgid "File"
+msgstr ""
+
+#: assets/js/drivetestpage.min.js:1042
+msgid "Download file"
+msgstr ""
+
+#: assets/js/drivetestpage.min.js:1049
+msgid "Downloading..."
+msgstr ""
+
+#: assets/js/drivetestpage.min.js:1049
+msgid "Download"
+msgstr ""
+
+#: assets/js/drivetestpage.min.js:1058
+msgid "View in Google Drive"
+msgstr ""
+
+#: assets/js/drivetestpage.min.js:1061
+msgid "View in Drive"
+msgstr ""
+
+#: assets/js/drivetestpage.min.js:1126
+#: assets/js/drivetestpage.min.js:1148
+msgid "Your Drive Files"
+msgstr ""
+
+#: assets/js/drivetestpage.min.js:1134
+msgid "Loading files..."
+msgstr ""
+
+#: assets/js/drivetestpage.min.js:1155
+msgid "Refresh file list"
+msgstr ""
+
+#: assets/js/drivetestpage.min.js:1158
+msgid "Refresh"
+msgstr ""
+
+#: assets/js/drivetestpage.min.js:1169
+msgid "No files found"
+msgstr ""
+
+#: assets/js/drivetestpage.min.js:1170
+msgid "Your Google Drive appears to be empty. Upload some files or create folders to get started."
+msgstr ""
+
+#: assets/js/drivetestpage.min.js:1177
+msgid "file"
+msgstr ""
+
+#: assets/js/drivetestpage.min.js:1177
+msgid "files"
+msgstr ""
+
+#: assets/js/drivetestpage.min.js:1263
+msgid "Failed to load files"
+msgstr ""
+
+#: assets/js/drivetestpage.min.js:1305
+msgid "Failed to start authentication"
+msgstr ""
+
+#: assets/js/drivetestpage.min.js:1320
+msgid "Failed to download file"
 msgstr ""

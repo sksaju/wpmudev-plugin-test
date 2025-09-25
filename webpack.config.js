@@ -76,6 +76,12 @@ module.exports = {
 		}),
 	],
 
+	externals: {
+		'@wordpress/element': ['wp', 'element'],
+		'@wordpress/i18n': ['wp', 'i18n'],
+		'@wordpress/api-fetch': ['wp', 'apiFetch'],
+	},
+
 	optimization: {
 		minimize: true,
 		minimizer: [

@@ -128,11 +128,9 @@ class Google_Drive extends Base {
 		$dependencies = ! empty( $this->script_data( 'dependencies' ) )
 			? $this->script_data( 'dependencies' )
 			: array(
-				'react',
 				'wp-element',
 				'wp-i18n',
-				'wp-is-shallow-equal',
-				'wp-polyfill',
+				'wp-api-fetch',
 			);
 
 		$this->page_scripts[ $handle ] = array(
@@ -153,6 +151,9 @@ class Google_Drive extends Base {
 				'authStatus'           => $this->get_auth_status(),
 				'redirectUri'          => home_url( '/wp-json/wpmudev/v1/drive/callback' ),
 				'hasCredentials'       => ! empty( $this->creds['client_id'] ) && ! empty( $this->creds['client_secret'] ),
+				'i18n'                 => array(
+					'title' => __( 'Google Drive Test', 'wpmudev-plugin-test' ),
+				),
 			),
 		);
 	}

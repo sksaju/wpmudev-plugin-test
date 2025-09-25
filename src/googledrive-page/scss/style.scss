@@ -5,6 +5,68 @@ $sui-image-path: '~@wpmudev/shared-ui/dist/images/';
 // Share UI styles
 @import "@wpmudev/shared-ui";
 
+// Import component styles
+@import "components/CredentialsForm";
+@import "components/AuthSection";
+@import "components/FileUpload";
+@import "components/FolderCreator";
+@import "components/FileItem";
+@import "components/FilesList";
+
+// Google Drive Test App Styles
+.google-drive-app {
+	.sui-wrap {
+		.sui-header {
+			.sui-header-title {
+				display: flex;
+				align-items: center;
+				gap: 8px;
+				font-size: 24px;
+				font-weight: 600;
+				color: #333;
+				
+				.sui-icon-cloud {
+					font-size: 28px;
+					color: #0073aa;
+				}
+			}
+		}
+		
+		.app-notice {
+			margin: 20px 0;
+			border-radius: 6px;
+			
+			.sui-notice-message {
+				display: flex;
+				align-items: center;
+				gap: 8px;
+			}
+		}
+		
+		.sui-row {
+			margin-bottom: 30px;
+			
+			&:last-child {
+				margin-bottom: 0;
+			}
+		}
+		
+		.sui-col-md-6,
+		.sui-col-md-12 {
+			.sui-box {
+				height: 100%;
+				border-radius: 8px;
+				box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+				transition: box-shadow 0.3s ease;
+				
+				&:hover {
+					box-shadow: 0 4px 16px rgba(0, 0, 0, 0.15);
+				}
+			}
+		}
+	}
+}
+
 .sui-box-body {
     .components-base-control {
         min-width: 100%;
@@ -19,7 +81,7 @@ $sui-image-path: '~@wpmudev/shared-ui/dist/images/';
     }
 }
 
-// Google Drive Test specific styles
+// Legacy styles for backward compatibility
 .drive-file-input {
     width: 100%;
     padding: 12px;
@@ -133,6 +195,16 @@ $sui-image-path: '~@wpmudev/shared-ui/dist/images/';
 
 // Responsive adjustments
 @media (max-width: 768px) {
+    .google-drive-app {
+        .sui-wrap {
+            .sui-row {
+                .sui-col-md-6 {
+                   	margin-bottom: 20px;
+                }
+            }
+        }
+    }
+    
     .drive-file-item {
         flex-direction: column;
         align-items: flex-start;

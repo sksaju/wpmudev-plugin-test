@@ -1,281 +1,201 @@
-import { createRoot, render, StrictMode, useState, useEffect, createInterpolateElement } from '@wordpress/element';
-import { Button, TextControl, Spinner, Notice } from '@wordpress/components';
+import { useState, useEffect, useCallback } from '@wordpress/element';
+import { __ } from '@wordpress/i18n';
+import apiFetch from '@wordpress/api-fetch';
 
-import "./scss/style.scss"
+// Import components
+import CredentialsForm from './components/CredentialsForm';
+import AuthSection from './components/AuthSection';
+import FileUpload from './components/FileUpload';
+import FolderCreator from './components/FolderCreator';
+import FilesList from './components/FilesList';
 
-const domElement = document.getElementById( window.wpmudevDriveTest.dom_element_id );
+// Import main styles
+import './scss/style.scss';
 
-const WPMUDEV_DriveTest = () => {
-    const [isAuthenticated, setIsAuthenticated] = useState(window.wpmudevDriveTest.authStatus || false);
-    const [hasCredentials, setHasCredentials] = useState(window.wpmudevDriveTest.hasCredentials || false);
-    const [showCredentials, setShowCredentials] = useState(!window.wpmudevDriveTest.hasCredentials);
-    const [isLoading, setIsLoading] = useState(false);
-    const [files, setFiles] = useState([]);
-    const [uploadFile, setUploadFile] = useState(null);
-    const [folderName, setFolderName] = useState('');
-    const [notice, setNotice] = useState({ message: '', type: '' });
-    const [credentials, setCredentials] = useState({
-        clientId: '',
-        clientSecret: ''
-    });
+// Main App Component
+const GoogleDriveTestApp = () => {
+	const [isAuthenticated, setIsAuthenticated] = useState(wpmudevDriveTest.authStatus);
+	const [hasCredentials, setHasCredentials] = useState(wpmudevDriveTest.hasCredentials);
+	const [files, setFiles] = useState([]);
+	const [isLoading, setIsLoading] = useState(false);
+	const [error, setError] = useState('');
 
-    useEffect(() => {
-    }, [isAuthenticated]);
+	const loadFiles = useCallback(async () => {
+		if (!isAuthenticated) return;
 
-    const showNotice = (message, type = 'success') => {
-        setNotice({ message, type });
-        setTimeout(() => setNotice({ message: '', type: '' }), 5000);
-    };
+		setIsLoading(true);
+		setError('');
 
-    const handleSaveCredentials = async () => {
-    };
+		try {
+			const response = await apiFetch({
+				path: wpmudevDriveTest.restEndpointFiles,
+				method: 'GET',
+			});
 
-    const handleAuth = async () => {
-    };
+			setFiles(response.files || []);
+		} catch (err) {
+			setError(err.message || __('Failed to load files', 'wpmudev-plugin-test'));
+		} finally {
+			setIsLoading(false);
+		}
+	}, [isAuthenticated]);
 
-    const loadFiles = async () => {
+	const handleAuth = async () => {
+		try {
+			const response = await apiFetch({
+				path: wpmudevDriveTest.restEndpointAuth,
+				method: 'POST',
+			});
 
-    };
+			if (response.auth_url) {
+				// Try multiple methods to open the authentication URL
+				try {
+					// Method 1: Try opening in a new window/tab
+					const authWindow = window.open(response.auth_url, 'google_auth', 'width=600,height=700,scrollbars=yes,resizable=yes');
+					
+					if (!authWindow || authWindow.closed || typeof authWindow.closed === 'undefined') {
+						// Method 2: If popup blocked, redirect current window
+						console.warn('Popup blocked, redirecting current window');
+						window.location.href = response.auth_url;
+					} else {
+						// Method 3: Monitor popup for completion
+						const checkClosed = setInterval(() => {
+							if (authWindow.closed) {
+								clearInterval(checkClosed);
+								// Reload page to check authentication status
+								window.location.reload();
+							}
+						}, 1000);
+					}
+				} catch (popupError) {
+					// Method 4: Fallback to direct redirect
+					console.warn('Popup failed, using direct redirect:', popupError);
+					window.location.href = response.auth_url;
+				}
+			} else {
+				console.error('No auth URL received');
+			}
+		} catch (err) {
+			setError(err.message || __('Failed to start authentication', 'wpmudev-plugin-test'));
+		}
+	};
 
-    const handleUpload = async () => {
-    };
+	const handleDownload = async (fileId) => {
+		try {
+			const response = await apiFetch({
+				path: `${wpmudevDriveTest.restEndpointDownload}?file_id=${fileId}`,
+				method: 'GET',
+			});
 
-    const handleDownload = async (fileId, fileName) => {
-    };
+			if (response.download_url) {
+				window.open(response.download_url, '_blank');
+			}
+		} catch (err) {
+			setError(err.message || __('Failed to download file', 'wpmudev-plugin-test'));
+		}
+	};
 
-    const handleCreateFolder = async () => {
-    };
+	const handleCredentialsSaved = () => {
+		setHasCredentials(true);
+	};
 
-    return (
-        <>
-            <div className="sui-header">
-                <h1 className="sui-header-title">
-                    Google Drive Test
-                </h1>
-                <p className="sui-description">Test Google Drive API integration for applicant assessment</p>
-            </div>
+	const handleUploadComplete = () => {
+		loadFiles();
+	};
 
-            {notice.message && (
-                <Notice status={notice.type} isDismissible onRemove=''>
-                    {notice.message}
-                </Notice>
-            )}
+	const handleFolderCreated = () => {
+		loadFiles();
+	};
 
-            {showCredentials ? (
-                <div className="sui-box">
-                    <div className="sui-box-header">
-                        <h2 className="sui-box-title">Set Google Drive Credentials</h2>
-                    </div>
-                    <div className="sui-box-body">
-                        <div className="sui-box-settings-row">
-                            <TextControl
-                                help={createInterpolateElement(
-                                    'You can get Client ID from <a>Google Cloud Console</a>. Make sure to enable Google Drive API.',
-                                    {
-                                        a: <a href="https://console.cloud.google.com/apis/credentials" target="_blank" rel="noopener noreferrer" />,
-                                    }
-                                )}
-                                label="Client ID"
-                                value={credentials.clientId}
-                                onChange={(value) => setCredentials({...credentials, clientId: value})}
-                            />
-                        </div>
+	useEffect(() => {
+		loadFiles();
+	}, [loadFiles]);
 
-                        <div className="sui-box-settings-row">
-                            <TextControl
-                                help={createInterpolateElement(
-                                    'You can get Client Secret from <a>Google Cloud Console</a>.',
-                                    {
-                                        a: <a href="https://console.cloud.google.com/apis/credentials" target="_blank" rel="noopener noreferrer" />,
-                                    }
-                                )}
-                                label="Client Secret"
-                                value={credentials.clientSecret}
-                                onChange={(value) => setCredentials({...credentials, clientSecret: value})}
-                                type="password"
-                            />
-                        </div>
+	return (
+		<div className="google-drive-app">
+			<div className="sui-wrap">
+				<div className="sui-header">
+					<h1 className="sui-header-title">
+						<span className="sui-icon-cloud" aria-hidden="true"></span>
+						{wpmudevDriveTest.i18n.title}
+					</h1>
+				</div>
 
-                        <div className="sui-box-settings-row">
-                            <span>Please use this URL <em>{window.wpmudevDriveTest.redirectUri}</em> in your Google API's <strong>Authorized redirect URIs</strong> field.</span>
-                        </div>
+				{error && (
+					<div className="sui-notice sui-notice-error app-notice">
+						<div className="sui-notice-content">
+							<div className="sui-notice-message">
+								<span className="sui-notice-icon sui-icon-info" aria-hidden="true"></span>
+								<p>{error}</p>
+							</div>
+						</div>
+					</div>
+				)}
 
-                        <div className="sui-box-settings-row">
-                            <p><strong>Required scopes for Google Drive API:</strong></p>
-                            <ul>
-                                <li>https://www.googleapis.com/auth/drive.file</li>
-                                <li>https://www.googleapis.com/auth/drive.readonly</li>
-                            </ul>
-                        </div>
-                    </div>
-                    <div className="sui-box-footer">
-                        <div className="sui-actions-right">
-                            <Button
-                                variant="primary"
-                                onClick={handleSaveCredentials}
-                                disabled={isLoading}
-                            >
-                                {isLoading ? <Spinner /> : 'Save Credentials'}
-                            </Button>
-                        </div>
-                    </div>
-                </div>
-            ) : !isAuthenticated ? (
-                <div className="sui-box">
-                    <div className="sui-box-header">
-                        <h2 className="sui-box-title">Authenticate with Google Drive</h2>
-                    </div>
-                    <div className="sui-box-body">
-                        <div className="sui-box-settings-row">
-                            <p>Please authenticate with Google Drive to proceed with the test.</p>
-                            <p><strong>This test will require the following permissions:</strong></p>
-                            <ul>
-                                <li>View and manage Google Drive files</li>
-                                <li>Upload new files to Drive</li>
-                                <li>Create folders in Drive</li>
-                            </ul>
-                        </div>
-                    </div>
-                    <div className="sui-box-footer">
-                        <div className="sui-actions-left">
-                            <Button
-                                variant="secondary"
-                                onClick={() => setShowCredentials(true)}
-                            >
-                                Change Credentials
-                            </Button>
-                        </div>
-                        <div className="sui-actions-right">
-                            <Button
-                                variant="primary"
-                                onClick={handleAuth}
-                                disabled={isLoading}
-                            >
-                                {isLoading ? <Spinner /> : 'Authenticate with Google Drive'}
-                            </Button>
-                        </div>
-                    </div>
-                </div>
-            ) : (
-                <>
-                    {/* File Upload Section */}
-                    <div className="sui-box">
-                        <div className="sui-box-header">
-                            <h2 className="sui-box-title">Upload File to Drive</h2>
-                        </div>
-                        <div className="sui-box-body">
-                            <div className="sui-box-settings-row">
-                                <input
-                                    type="file"
-                                    onChange={(e) => setUploadFile(e.target.files[0])}
-                                    className="drive-file-input"
-                                />
-                                {uploadFile && (
-                                    <p><strong>Selected:</strong> {uploadFile.name} ({Math.round(uploadFile.size / 1024)} KB)</p>
-                                )}
-                            </div>
-                        </div>
-                        <div className="sui-box-footer">
-                            <div className="sui-actions-right">
-                                <Button
-                                    variant="primary"
-                                    onClick={handleUpload}
-                                    disabled={isLoading || !uploadFile}
-                                >
-                                    {isLoading ? <Spinner /> : 'Upload to Drive'}
-                                </Button>
-                            </div>
-                        </div>
-                    </div>
+				<div className="sui-row">
+					<div className="sui-col-md-6">
+						<CredentialsForm
+							onSave={handleCredentialsSaved}
+							isLoading={isLoading}
+							hasCredentials={hasCredentials}
+						/>
+					</div>
+					<div className="sui-col-md-6">
+						<AuthSection
+							onAuth={handleAuth}
+							isAuthenticated={isAuthenticated}
+							isLoading={isLoading}
+						/>
+					</div>
+				</div>
 
-                    {/* Create Folder Section */}
-                    <div className="sui-box">
-                        <div className="sui-box-header">
-                            <h2 className="sui-box-title">Create New Folder</h2>
-                        </div>
-                        <div className="sui-box-body">
-                            <div className="sui-box-settings-row">
-                                <TextControl
-                                    label="Folder Name"
-                                    value={folderName}
-                                    onChange={setFolderName}
-                                    placeholder="Enter folder name"
-                                />
-                            </div>
-                        </div>
-                        <div className="sui-box-footer">
-                            <div className="sui-actions-right">
-                                <Button
-                                    variant="secondary"
-                                    onClick={handleCreateFolder}
-                                    disabled={isLoading || !folderName.trim()}
-                                >
-                                    {isLoading ? <Spinner /> : 'Create Folder'}
-                                </Button>
-                            </div>
-                        </div>
-                    </div>
+				{isAuthenticated && (
+					<>
+						<div className="sui-row">
+							<div className="sui-col-md-6">
+								<FileUpload
+									onUpload={handleUploadComplete}
+									onUploadComplete={handleUploadComplete}
+								/>
+							</div>
+							<div className="sui-col-md-6">
+								<FolderCreator
+									onCreateFolder={handleFolderCreated}
+									onFolderCreated={handleFolderCreated}
+								/>
+							</div>
+						</div>
 
-                    {/* Files List Section */}
-                    <div className="sui-box">
-                        <div className="sui-box-header">
-                            <h2 className="sui-box-title">Your Drive Files</h2>
-                            <div className="sui-actions-right">
-                                <Button
-                                    variant="secondary"
-                                    onClick={loadFiles}
-                                    disabled={isLoading}
-                                >
-                                    {isLoading ? <Spinner /> : 'Refresh Files'}
-                                </Button>
-                            </div>
-                        </div>
-                        <div className="sui-box-body">
-                            {isLoading ? (
-                                <div className="drive-loading">
-                                    <Spinner />
-                                    <p>Loading files...</p>
-                                </div>
-                            ) : files.length > 0 ? (
-                                <div className="drive-files-grid">
-                                    {files.map((file) => (
-                                        <div key={file.id} className="drive-file-item">
-                                            <div className="file-info">
-                                                <strong>{file.name}</strong>
-                                                <small>
-                                                    {file.modifiedTime ? new Date(file.modifiedTime).toLocaleDateString() : 'Unknown date'}
-                                                </small>
-                                            </div>
-                                            <div className="file-actions">
-                                                {file.webViewLink && (
-                                                    <Button
-                                                        variant="link"
-                                                        size="small"
-                                                        href=''
-                                                        target="_blank"
-                                                    >
-                                                        View in Drive
-                                                    </Button>
-                                                )}
-                                            </div>
-                                        </div>
-                                    ))}
-                                </div>
-                            ) : (
-                                <div className="sui-box-settings-row">
-                                    <p>No files found in your Drive. Upload a file or create a folder to get started.</p>
-                                </div>
-                            )}
-                        </div>
-                    </div>
-                </>
-            )}
-        </>
-    );
-}
+						<div className="sui-row">
+							<div className="sui-col-md-12">
+								<FilesList
+									files={files}
+									isLoading={isLoading}
+									onDownload={handleDownload}
+									onRefresh={loadFiles}
+								/>
+							</div>
+						</div>
+					</>
+				)}
+			</div>
+		</div>
+	);
+};
 
-if ( createRoot ) {
-    createRoot( domElement ).render(<StrictMode><WPMUDEV_DriveTest/></StrictMode>);
+// Initialize the app
+const initGoogleDriveTest = () => {
+	const rootElement = document.getElementById(wpmudevDriveTest.dom_element_id);
+	if (rootElement) {
+		const { createRoot } = wp.element;
+		const root = createRoot(rootElement);
+		root.render(<GoogleDriveTestApp />);
+	}
+};
+
+// Initialize when DOM is ready
+if (document.readyState === 'loading') {
+	document.addEventListener('DOMContentLoaded', initGoogleDriveTest);
 } else {
-    render( <StrictMode><WPMUDEV_DriveTest/></StrictMode>, domElement );
+	initGoogleDriveTest();
 }
