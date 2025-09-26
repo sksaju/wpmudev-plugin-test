@@ -9,7 +9,7 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2025-09-26T09:50:40+00:00\n"
+"POT-Creation-Date: 2025-09-26T10:07:09+00:00\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "X-Generator: WP-CLI 2.11.0\n"
 
@@ -30,71 +30,92 @@ msgstr ""
 
 #: app/admin-pages/class-googledrive-settings.php:81
 #: app/admin-pages/class-googledrive-settings.php:158
+#: build/wpmudev-plugin-test/app/admin-pages/class-googledrive-settings.php:81
+#: build/wpmudev-plugin-test/app/admin-pages/class-googledrive-settings.php:158
 msgid "Google Drive Test"
 msgstr ""
 
 #: app/admin-pages/class-googledrive-settings.php:255
+#: build/wpmudev-plugin-test/app/admin-pages/class-googledrive-settings.php:255
 #: assets/js/drivetestpage.min.js:703
 msgid "Successfully authenticated with Google Drive!"
 msgstr ""
 
 #: app/admin-pages/class-googledrive-settings.php:259
+#: build/wpmudev-plugin-test/app/admin-pages/class-googledrive-settings.php:259
 msgid "Authentication failed: "
 msgstr ""
 
-#: app/admin-pages/class-posts-maintenance-page.php:18
-#: app/admin-pages/class-posts-maintenance-page.php:19
-#: app/admin-pages/class-posts-maintenance-page.php:38
+#: app/admin-pages/class-posts-maintenance-page.php:31
+#: app/admin-pages/class-posts-maintenance-page.php:32
+#: app/admin-pages/class-posts-maintenance-page.php:51
+#: build/wpmudev-plugin-test/app/admin-pages/class-posts-maintenance-page.php:31
+#: build/wpmudev-plugin-test/app/admin-pages/class-posts-maintenance-page.php:32
+#: build/wpmudev-plugin-test/app/admin-pages/class-posts-maintenance-page.php:51
 msgid "Posts Maintenance"
 msgstr ""
 
-#: app/admin-pages/class-posts-maintenance-page.php:32
+#: app/admin-pages/class-posts-maintenance-page.php:45
+#: build/wpmudev-plugin-test/app/admin-pages/class-posts-maintenance-page.php:45
 msgid "Scan started in background."
 msgstr ""
 
-#: app/admin-pages/class-posts-maintenance-page.php:41
+#: app/admin-pages/class-posts-maintenance-page.php:54
+#: build/wpmudev-plugin-test/app/admin-pages/class-posts-maintenance-page.php:54
 msgid "Select post types to scan:"
 msgstr ""
 
-#: app/admin-pages/class-posts-maintenance-page.php:45
+#: app/admin-pages/class-posts-maintenance-page.php:58
+#: build/wpmudev-plugin-test/app/admin-pages/class-posts-maintenance-page.php:58
 msgid "Scan Posts"
 msgstr ""
 
-#: app/admin-pages/class-posts-maintenance-page.php:48
+#: app/admin-pages/class-posts-maintenance-page.php:61
+#: build/wpmudev-plugin-test/app/admin-pages/class-posts-maintenance-page.php:61
 msgid "Progress"
 msgstr ""
 
 #: app/endpoints/v1/class-googledrive-rest.php:187
+#: build/wpmudev-plugin-test/app/endpoints/v1/class-googledrive-rest.php:187
 msgid "No credentials found"
 msgstr ""
 
 #: app/endpoints/v1/class-googledrive-rest.php:211
 #: app/endpoints/v1/class-googledrive-rest.php:244
 #: app/endpoints/v1/class-googledrive-rest.php:656
+#: build/wpmudev-plugin-test/app/endpoints/v1/class-googledrive-rest.php:211
+#: build/wpmudev-plugin-test/app/endpoints/v1/class-googledrive-rest.php:244
+#: build/wpmudev-plugin-test/app/endpoints/v1/class-googledrive-rest.php:656
 msgid "Security check failed. Please refresh the page and try again."
 msgstr ""
 
 #: app/endpoints/v1/class-googledrive-rest.php:218
+#: build/wpmudev-plugin-test/app/endpoints/v1/class-googledrive-rest.php:218
 msgid "Client ID and Client Secret are required"
 msgstr ""
 
 #: app/endpoints/v1/class-googledrive-rest.php:230
+#: build/wpmudev-plugin-test/app/endpoints/v1/class-googledrive-rest.php:230
 msgid "Credentials saved successfully"
 msgstr ""
 
 #: app/endpoints/v1/class-googledrive-rest.php:250
+#: build/wpmudev-plugin-test/app/endpoints/v1/class-googledrive-rest.php:250
 msgid "Please save your Google Drive credentials first"
 msgstr ""
 
 #: app/endpoints/v1/class-googledrive-rest.php:272
+#: build/wpmudev-plugin-test/app/endpoints/v1/class-googledrive-rest.php:272
 msgid "Opening Google authentication in a new window. If blocked, please check your browser settings."
 msgstr ""
 
 #: app/endpoints/v1/class-googledrive-rest.php:302
+#: build/wpmudev-plugin-test/app/endpoints/v1/class-googledrive-rest.php:302
 msgid "Invalid state parameter"
 msgstr ""
 
 #: app/endpoints/v1/class-googledrive-rest.php:312
+#: build/wpmudev-plugin-test/app/endpoints/v1/class-googledrive-rest.php:312
 msgid "No authorization code received"
 msgstr ""
 
@@ -102,42 +123,55 @@ msgstr ""
 #: app/endpoints/v1/class-googledrive-rest.php:482
 #: app/endpoints/v1/class-googledrive-rest.php:550
 #: app/endpoints/v1/class-googledrive-rest.php:603
+#: build/wpmudev-plugin-test/app/endpoints/v1/class-googledrive-rest.php:427
+#: build/wpmudev-plugin-test/app/endpoints/v1/class-googledrive-rest.php:482
+#: build/wpmudev-plugin-test/app/endpoints/v1/class-googledrive-rest.php:550
+#: build/wpmudev-plugin-test/app/endpoints/v1/class-googledrive-rest.php:603
 msgid "Not authenticated with Google Drive"
 msgstr ""
 
 #: app/endpoints/v1/class-googledrive-rest.php:487
+#: build/wpmudev-plugin-test/app/endpoints/v1/class-googledrive-rest.php:487
 msgid "No file uploaded"
 msgstr ""
 
 #: app/endpoints/v1/class-googledrive-rest.php:533
+#: build/wpmudev-plugin-test/app/endpoints/v1/class-googledrive-rest.php:533
 msgid "File uploaded successfully"
 msgstr ""
 
 #: app/endpoints/v1/class-googledrive-rest.php:556
+#: build/wpmudev-plugin-test/app/endpoints/v1/class-googledrive-rest.php:556
 msgid "File ID is required"
 msgstr ""
 
 #: app/endpoints/v1/class-googledrive-rest.php:569
+#: build/wpmudev-plugin-test/app/endpoints/v1/class-googledrive-rest.php:569
 msgid "Failed to get file metadata"
 msgstr ""
 
 #: app/endpoints/v1/class-googledrive-rest.php:575
+#: build/wpmudev-plugin-test/app/endpoints/v1/class-googledrive-rest.php:575
 msgid "Google Drive API error: "
 msgstr ""
 
 #: app/endpoints/v1/class-googledrive-rest.php:591
+#: build/wpmudev-plugin-test/app/endpoints/v1/class-googledrive-rest.php:591
 msgid "Error getting download URL: "
 msgstr ""
 
 #: app/endpoints/v1/class-googledrive-rest.php:638
+#: build/wpmudev-plugin-test/app/endpoints/v1/class-googledrive-rest.php:638
 msgid "Folder created successfully"
 msgstr ""
 
 #: app/endpoints/v1/class-googledrive-rest.php:663
+#: build/wpmudev-plugin-test/app/endpoints/v1/class-googledrive-rest.php:663
 msgid "No active connection found"
 msgstr ""
 
 #: app/endpoints/v1/class-googledrive-rest.php:698
+#: build/wpmudev-plugin-test/app/endpoints/v1/class-googledrive-rest.php:698
 msgid "Successfully disconnected from Google Drive"
 msgstr ""
 
