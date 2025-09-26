@@ -12,6 +12,7 @@ $sui-image-path: '~@wpmudev/shared-ui/dist/images/';
 @import "components/FolderCreator";
 @import "components/FileItem";
 @import "components/FilesList";
+@import "components/Pagination";
 
 // Google Drive Test App Styles
 .google-drive-app {

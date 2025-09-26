@@ -9,7 +9,7 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2025-09-26T08:49:04+00:00\n"
+"POT-Creation-Date: 2025-09-26T09:33:56+00:00\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "X-Generator: WP-CLI 2.11.0\n"
 
@@ -70,7 +70,7 @@ msgstr ""
 
 #: app/endpoints/v1/class-googledrive-rest.php:211
 #: app/endpoints/v1/class-googledrive-rest.php:244
-#: app/endpoints/v1/class-googledrive-rest.php:652
+#: app/endpoints/v1/class-googledrive-rest.php:656
 msgid "Security check failed. Please refresh the page and try again."
 msgstr ""
 
@@ -86,58 +86,58 @@ msgstr ""
 msgid "Please save your Google Drive credentials first"
 msgstr ""
 
-#: app/endpoints/v1/class-googledrive-rest.php:270
+#: app/endpoints/v1/class-googledrive-rest.php:272
 msgid "Opening Google authentication in a new window. If blocked, please check your browser settings."
 msgstr ""
 
-#: app/endpoints/v1/class-googledrive-rest.php:300
+#: app/endpoints/v1/class-googledrive-rest.php:302
 msgid "Invalid state parameter"
 msgstr ""
 
-#: app/endpoints/v1/class-googledrive-rest.php:310
+#: app/endpoints/v1/class-googledrive-rest.php:312
 msgid "No authorization code received"
 msgstr ""
 
-#: app/endpoints/v1/class-googledrive-rest.php:423
-#: app/endpoints/v1/class-googledrive-rest.php:478
-#: app/endpoints/v1/class-googledrive-rest.php:546
-#: app/endpoints/v1/class-googledrive-rest.php:599
+#: app/endpoints/v1/class-googledrive-rest.php:427
+#: app/endpoints/v1/class-googledrive-rest.php:482
+#: app/endpoints/v1/class-googledrive-rest.php:550
+#: app/endpoints/v1/class-googledrive-rest.php:603
 msgid "Not authenticated with Google Drive"
 msgstr ""
 
-#: app/endpoints/v1/class-googledrive-rest.php:483
+#: app/endpoints/v1/class-googledrive-rest.php:487
 msgid "No file uploaded"
 msgstr ""
 
-#: app/endpoints/v1/class-googledrive-rest.php:529
+#: app/endpoints/v1/class-googledrive-rest.php:533
 msgid "File uploaded successfully"
 msgstr ""
 
-#: app/endpoints/v1/class-googledrive-rest.php:552
+#: app/endpoints/v1/class-googledrive-rest.php:556
 msgid "File ID is required"
 msgstr ""
 
-#: app/endpoints/v1/class-googledrive-rest.php:565
+#: app/endpoints/v1/class-googledrive-rest.php:569
 msgid "Failed to get file metadata"
 msgstr ""
 
-#: app/endpoints/v1/class-googledrive-rest.php:571
+#: app/endpoints/v1/class-googledrive-rest.php:575
 msgid "Google Drive API error: "
 msgstr ""
 
-#: app/endpoints/v1/class-googledrive-rest.php:587
+#: app/endpoints/v1/class-googledrive-rest.php:591
 msgid "Error getting download URL: "
 msgstr ""
 
-#: app/endpoints/v1/class-googledrive-rest.php:634
+#: app/endpoints/v1/class-googledrive-rest.php:638
 msgid "Folder created successfully"
 msgstr ""
 
-#: app/endpoints/v1/class-googledrive-rest.php:659
+#: app/endpoints/v1/class-googledrive-rest.php:663
 msgid "No active connection found"
 msgstr ""
 
-#: app/endpoints/v1/class-googledrive-rest.php:694
+#: app/endpoints/v1/class-googledrive-rest.php:698
 msgid "Successfully disconnected from Google Drive"
 msgstr ""
 
@@ -396,56 +396,75 @@ msgstr ""
 msgid "View in Drive"
 msgstr ""
 
-#: assets/js/drivetestpage.min.js:1323
-#: assets/js/drivetestpage.min.js:1345
-msgid "Your Drive Files"
+#: assets/js/drivetestpage.min.js:1316
+#: assets/js/drivetestpage.min.js:1320
+msgid "Showing"
 msgstr ""
 
-#: assets/js/drivetestpage.min.js:1331
-msgid "Loading files..."
+#: assets/js/drivetestpage.min.js:1316
+msgid "of"
 msgstr ""
 
-#: assets/js/drivetestpage.min.js:1352
-msgid "Refresh file list"
-msgstr ""
-
-#: assets/js/drivetestpage.min.js:1355
-msgid "Refresh"
-msgstr ""
-
-#: assets/js/drivetestpage.min.js:1366
-msgid "No files found"
-msgstr ""
-
-#: assets/js/drivetestpage.min.js:1367
-msgid "Your Google Drive appears to be empty. Upload some files or create folders to get started."
-msgstr ""
-
-#: assets/js/drivetestpage.min.js:1374
-msgid "file"
-msgstr ""
-
-#: assets/js/drivetestpage.min.js:1374
+#: assets/js/drivetestpage.min.js:1316
+#: assets/js/drivetestpage.min.js:1320
+#: assets/js/drivetestpage.min.js:1494
 msgid "files"
 msgstr ""
 
-#: assets/js/drivetestpage.min.js:1460
+#: assets/js/drivetestpage.min.js:1335
+msgid "Loading..."
+msgstr ""
+
+#: assets/js/drivetestpage.min.js:1340
+msgid "Load More"
+msgstr ""
+
+#: assets/js/drivetestpage.min.js:1443
+#: assets/js/drivetestpage.min.js:1465
+msgid "Your Drive Files"
+msgstr ""
+
+#: assets/js/drivetestpage.min.js:1451
+msgid "Loading files..."
+msgstr ""
+
+#: assets/js/drivetestpage.min.js:1472
+msgid "Refresh file list"
+msgstr ""
+
+#: assets/js/drivetestpage.min.js:1475
+msgid "Refresh"
+msgstr ""
+
+#: assets/js/drivetestpage.min.js:1486
+msgid "No files found"
+msgstr ""
+
+#: assets/js/drivetestpage.min.js:1487
+msgid "Your Google Drive appears to be empty. Upload some files or create folders to get started."
+msgstr ""
+
+#: assets/js/drivetestpage.min.js:1494
+msgid "file"
+msgstr ""
+
+#: assets/js/drivetestpage.min.js:1588
 msgid "Failed to load files"
 msgstr ""
 
-#: assets/js/drivetestpage.min.js:1482
+#: assets/js/drivetestpage.min.js:1610
 msgid "Failed to start authentication"
 msgstr ""
 
-#: assets/js/drivetestpage.min.js:1515
-#: assets/js/drivetestpage.min.js:1522
+#: assets/js/drivetestpage.min.js:1643
+#: assets/js/drivetestpage.min.js:1650
 msgid "Failed to download file"
 msgstr ""
 
-#: assets/js/drivetestpage.min.js:1518
+#: assets/js/drivetestpage.min.js:1646
 msgid "Failed to get download URL"
 msgstr ""
 
-#: assets/js/drivetestpage.min.js:1556
+#: assets/js/drivetestpage.min.js:1688
 msgid "Failed to disconnect from Google Drive"
 msgstr ""

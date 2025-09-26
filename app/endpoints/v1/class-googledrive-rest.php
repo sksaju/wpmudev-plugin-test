@@ -220,7 +220,7 @@ class Drive_API extends Base {
 
 		$credentials = array(
 			'client_id'     => $client_id,
-			'client_secret' => $client_secret,
+			'client_secret' => $this->encrypt_credential( $client_secret ),
 		);
 
 		update_option( 'wpmudev_plugin_tests_auth', $credentials );
@@ -249,6 +249,8 @@ class Drive_API extends Base {
 		if ( empty( $auth_creds['client_id'] ) || empty( $auth_creds['client_secret'] ) ) {
 			return new WP_Error( 'no_credentials', __( 'Please save your Google Drive credentials first', 'wpmudev-plugin-test' ), array( 'status' => 400 ) );
 		}
+		
+		$client_secret = $this->decrypt_credential( $auth_creds['client_secret'] );
 
 		$state = wp_generate_password( 32, false );
 		set_transient( 'wpmudev_drive_auth_state', $state, 600 ); // 10 minutes
@@ -314,12 +316,13 @@ class Drive_API extends Base {
 		}
 
 		$auth_creds = get_option( 'wpmudev_plugin_tests_auth', array() );
+		$client_secret = $this->decrypt_credential( $auth_creds['client_secret'] );
 		
 		// Exchange code for tokens
 		$token_response = wp_remote_post( 'https://oauth2.googleapis.com/token', array(
 			'body' => array(
 				'client_id'     => $auth_creds['client_id'],
-				'client_secret' => $auth_creds['client_secret'],
+				'client_secret' => $client_secret,
 				'code'          => $code,
 				'grant_type'    => 'authorization_code',
 				'redirect_uri'  => $this->redirect_uri,
@@ -385,11 +388,12 @@ class Drive_API extends Base {
 			}
 
 			$auth_creds = get_option( 'wpmudev_plugin_tests_auth', array() );
+			$client_secret = $this->decrypt_credential( $auth_creds['client_secret'] );
 			
 			$refresh_response = wp_remote_post( 'https://oauth2.googleapis.com/token', array(
 				'body' => array(
 					'client_id'     => $auth_creds['client_id'],
-					'client_secret' => $auth_creds['client_secret'],
+					'client_secret' => $client_secret,
 					'refresh_token' => $refresh_token,
 					'grant_type'    => 'refresh_token',
 				),
@@ -703,5 +707,58 @@ class Drive_API extends Base {
 			
 			return new WP_Error( 'disconnect_error', $e->getMessage(), array( 'status' => 500 ) );
 		}
+	}
+
+	/**
+	 * Encrypt credential for secure storage.
+	 *
+	 * @param string $credential The credential to encrypt.
+	 * @return string Encrypted credential.
+	 */
+	private function encrypt_credential( $credential ) {
+		if ( ! function_exists( 'openssl_encrypt' ) ) {
+			return base64_encode( $credential );
+		}
+
+		$key = $this->get_encryption_key();
+		$iv = random_bytes( 16 );
+		$encrypted = openssl_encrypt( $credential, 'AES-256-CBC', $key, 0, $iv );
+		
+		return base64_encode( $iv . $encrypted );
+	}
+
+	/**
+	 * Decrypt credential from storage.
+	 *
+	 * @param string $encrypted_credential The encrypted credential.
+	 * @return string Decrypted credential.
+	 */
+	private function decrypt_credential( $encrypted_credential ) {
+		if ( ! function_exists( 'openssl_decrypt' ) ) {
+			return base64_decode( $encrypted_credential );
+		}
+
+		$key = $this->get_encryption_key();
+		$data = base64_decode( $encrypted_credential );
+		$iv = substr( $data, 0, 16 );
+		$encrypted = substr( $data, 16 );
+		
+		return openssl_decrypt( $encrypted, 'AES-256-CBC', $key, 0, $iv );
+	}
+
+	/**
+	 * Get encryption key for credentials.
+	 *
+	 * @return string Encryption key.
+	 */
+	private function get_encryption_key() {
+		$key = get_option( 'wpmudev_plugin_test_encryption_key' );
+		
+		if ( empty( $key ) ) {
+			$key = wp_generate_password( 32, true, true );
+			update_option( 'wpmudev_plugin_test_encryption_key', $key );
+		}
+		
+		return hash( 'sha256', $key . AUTH_SALT );
 	}
 }

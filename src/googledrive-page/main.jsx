@@ -2,7 +2,7 @@ import { useState, useEffect, useCallback } from '@wordpress/element';
 import { __ } from '@wordpress/i18n';
 import apiFetch from '@wordpress/api-fetch';
 
-// Import components
+// Internal components
 import CredentialsForm from './components/CredentialsForm';
 import AuthSection from './components/AuthSection';
 import FileUpload from './components/FileUpload';
@@ -12,11 +12,11 @@ import FilesList from './components/FilesList';
 // Import main styles
 import './scss/style.scss';
 
-// Main App Component
 const GoogleDriveTestApp = () => {
 	const [isAuthenticated, setIsAuthenticated] = useState(wpmudevDriveTest.authStatus);
 	const [hasCredentials, setHasCredentials] = useState(wpmudevDriveTest.hasCredentials);
 	const [files, setFiles] = useState([]);
+	const [nextPageToken, setNextPageToken] = useState('');
 	const [isLoading, setIsLoading] = useState(false);
 	const [error, setError] = useState('');
 
@@ -28,11 +28,12 @@ const GoogleDriveTestApp = () => {
 
 		try {
 			const response = await apiFetch({
-				path: wpmudevDriveTest.restEndpointFiles,
+				path: `${wpmudevDriveTest.restEndpointFiles}?page_size=20`,
 				method: 'GET',
 			});
 
 			setFiles(response.files || []);
+			setNextPageToken(response.nextPageToken || '');
 		} catch (err) {
 			setError(err.message || __('Failed to load files', 'wpmudev-plugin-test'));
 		} finally {
@@ -105,10 +106,14 @@ const GoogleDriveTestApp = () => {
 	};
 
 	const handleUploadComplete = () => {
+		setFiles([]);
+		setNextPageToken('');
 		loadFiles();
 	};
 
 	const handleFolderCreated = () => {
+		setFiles([]);
+		setNextPageToken('');
 		loadFiles();
 	};
 
@@ -198,6 +203,7 @@ const GoogleDriveTestApp = () => {
 							<div className="sui-col-md-12">
 								<FilesList
 									files={files}
+									nextPageToken={nextPageToken}
 									isLoading={isLoading}
 									onDownload={handleDownload}
 									onRefresh={loadFiles}
