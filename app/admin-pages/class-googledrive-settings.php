@@ -31,7 +31,7 @@ class Google_Drive extends Base {
 	 *
 	 * @var string
 	 */
-	private $page_slug = 'wpmudev_plugintest_drive';
+	private $page_slug = 'wpmudev-plugin-test-googledrive';
 
 	/**
 	 * Google Drive auth credentials.
@@ -40,7 +40,7 @@ class Google_Drive extends Base {
 	 *
 	 * @var array
 	 */
-	private $creds = array();
+	private $creds = array(); 
 
 	/**
 	 * Option name for credentials (reusing the same as original auth).
@@ -143,6 +143,7 @@ class Google_Drive extends Base {
 			'localize'  => array(
 				'dom_element_id'         => $this->unique_id,
 				'restEndpointSave'       => 'wpmudev/v1/drive/save-credentials',
+				'restEndpointGet'        => 'wpmudev/v1/drive/get-credentials',
 				'restEndpointAuth'       => 'wpmudev/v1/drive/auth',
 				'restEndpointDisconnect' => 'wpmudev/v1/drive/disconnect',
 				'restEndpointFiles'      => 'wpmudev/v1/drive/files',

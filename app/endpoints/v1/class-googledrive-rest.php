@@ -70,7 +70,20 @@ class Drive_API extends Base {
 					'required' => true,
 					'type'     => 'string',
 				),
+				'_wpnonce' => array(
+					'required' => false,
+					'type'     => 'string',
+				),
 			),
+		) );
+
+		// Get credentials endpoint
+		register_rest_route( 'wpmudev/v1/drive', '/get-credentials', array(
+			'methods'             => 'GET',
+			'callback'            => array( $this, 'get_credentials' ),
+			'permission_callback' => function () {
+				return current_user_can( 'manage_options' );
+			},
 		) );
 
 		// Authentication endpoint
@@ -80,6 +93,12 @@ class Drive_API extends Base {
 			'permission_callback' => function () {
 				return current_user_can( 'manage_options' );
 			},
+			'args'                => array(
+				'_wpnonce' => array(
+					'required' => false,
+					'type'     => 'string',
+				),
+			),
 		) );
 
 		// OAuth callback
@@ -143,6 +162,39 @@ class Drive_API extends Base {
 			'permission_callback' => function () {
 				return current_user_can( 'manage_options' );
 			},
+			'args'                => array(
+				'_wpnonce' => array(
+					'required' => false,
+					'type'     => 'string',
+				),
+			),
+		) );
+	}
+
+	/**
+	 * Get saved Google Drive credentials.
+	 *
+	 * @param WP_REST_Request $request
+	 * @return WP_REST_Response|WP_Error
+	 */
+	public function get_credentials( WP_REST_Request $request ) {
+		$credentials = get_option( 'wpmudev_plugin_tests_auth', array() );
+
+		if ( empty( $credentials ) ) {
+			return new WP_REST_Response( array(
+				'success'     => false,
+				'credentials' => null,
+				'message'     => __( 'No credentials found', 'wpmudev-plugin-test' ),
+			) );
+		}
+
+		// Return credentials with masked secret
+		return new WP_REST_Response( array(
+			'success'     => true,
+			'credentials' => array(
+				'client_id'     => $credentials['client_id'] ?? '',
+				'client_secret' => '******************************',
+			),
 		) );
 	}
 
@@ -153,6 +205,12 @@ class Drive_API extends Base {
 	 * @return WP_REST_Response|WP_Error
 	 */
 	public function save_credentials( WP_REST_Request $request ) {
+		// Verify nonce for security
+		$nonce = $request->get_param( '_wpnonce' );
+		if ( ! wp_verify_nonce( $nonce, 'wp_rest' ) ) {
+			return new WP_Error( 'invalid_nonce', __( 'Security check failed. Please refresh the page and try again.', 'wpmudev-plugin-test' ), array( 'status' => 403 ) );
+		}
+
 		$client_id     = sanitize_text_field( $request->get_param( 'client_id' ) );
 		$client_secret = sanitize_text_field( $request->get_param( 'client_secret' ) );
 
@@ -180,6 +238,12 @@ class Drive_API extends Base {
 	 * @return WP_REST_Response|WP_Error
 	 */
 	public function start_auth( WP_REST_Request $request ) {
+		// Verify nonce for security
+		$nonce = $request->get_param( '_wpnonce' );
+		if ( ! wp_verify_nonce( $nonce, 'wp_rest' ) ) {
+			return new WP_Error( 'invalid_nonce', __( 'Security check failed. Please refresh the page and try again.', 'wpmudev-plugin-test' ), array( 'status' => 403 ) );
+		}
+
 		$auth_creds = get_option( 'wpmudev_plugin_tests_auth', array() );
 		
 		if ( empty( $auth_creds['client_id'] ) || empty( $auth_creds['client_secret'] ) ) {
@@ -562,16 +626,22 @@ class Drive_API extends Base {
 	 * @return WP_REST_Response|WP_Error
 	 */
 	public function disconnect( WP_REST_Request $request ) {
+		// Verify nonce for security
+		$nonce = $request->get_param( '_wpnonce' );
+		if ( ! wp_verify_nonce( $nonce, 'wp_rest' ) ) {
+			return new WP_Error( 'invalid_nonce', __( 'Security check failed. Please refresh the page and try again.', 'wpmudev-plugin-test' ), array( 'status' => 403 ) );
+		}
+
 		try {
-			$tokens = get_option( 'wpmudev_plugin_tests_tokens', array() );
+			$access_token = get_option( 'wpmudev_drive_access_token', '' );
 			
-			if ( empty( $tokens['access_token'] ) ) {
+			if ( empty( $access_token ) ) {
 				return new WP_Error( 'no_tokens', __( 'No active connection found', 'wpmudev-plugin-test' ), array( 'status' => 400 ) );
 			}
 
 			// Revoke the access token with Google
 			$revoke_url = add_query_arg( array(
-				'token' => $tokens['access_token'],
+				'token' => $access_token,
 			), 'https://oauth2.googleapis.com/revoke' );
 
 			$response = wp_remote_post( $revoke_url, array(
@@ -582,7 +652,9 @@ class Drive_API extends Base {
 			) );
 
 			// Clear stored tokens regardless of revoke response
-			delete_option( 'wpmudev_plugin_tests_tokens' );
+			delete_option( 'wpmudev_drive_access_token' );
+			delete_option( 'wpmudev_drive_refresh_token' );
+			delete_option( 'wpmudev_drive_token_expires' );
 			delete_transient( 'wpmudev_drive_auth_state' );
 
 			// Log the revoke attempt
@@ -604,7 +676,9 @@ class Drive_API extends Base {
 
 		} catch ( Exception $e ) {
 			// Even if revoke fails, clear local tokens
-			delete_option( 'wpmudev_plugin_tests_tokens' );
+			delete_option( 'wpmudev_drive_access_token' );
+			delete_option( 'wpmudev_drive_refresh_token' );
+			delete_option( 'wpmudev_drive_token_expires' );
 			delete_transient( 'wpmudev_drive_auth_state' );
 			
 			return new WP_Error( 'disconnect_error', $e->getMessage(), array( 'status' => 500 ) );

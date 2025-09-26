@@ -10,6 +10,7 @@ const CredentialsForm = ({ onSave, isLoading, hasCredentials }) => {
 	const [error, setError] = useState('');
 	const [success, setSuccess] = useState('');
 	const [showInstructions, setShowInstructions] = useState(false);
+	const [isEditing, setIsEditing] = useState(!hasCredentials);
 
 	// Clear success message after 5 seconds
 	useEffect(() => {
@@ -18,6 +19,24 @@ const CredentialsForm = ({ onSave, isLoading, hasCredentials }) => {
 			return () => clearTimeout(timer);
 		}
 	}, [success]);
+
+	// Load saved credentials when component mounts
+	useEffect(() => {
+		if (hasCredentials) {
+		// Fetch saved credentials to display
+		apiFetch({
+			path: wpmudevDriveTest.restEndpointGet,
+			method: 'GET',
+		}).then((response) => {
+				if (response.success && response.credentials) {
+					setClientId(response.credentials.client_id || '');
+					setClientSecret('******************************'); // Mask the secret
+				}
+			}).catch((err) => {
+				console.error('Failed to load credentials:', err);
+			});
+		}
+	}, [hasCredentials]);
 
 	const validateClientId = (id) => {
 		// Google OAuth client IDs typically end with .apps.googleusercontent.com
@@ -51,10 +70,12 @@ const CredentialsForm = ({ onSave, isLoading, hasCredentials }) => {
 				data: {
 					client_id: clientId.trim(),
 					client_secret: clientSecret.trim(),
+					_wpnonce: wpmudevDriveTest.nonce,
 				},
 			});
 
 			setSuccess(__('Credentials saved successfully! You can now authenticate with Google Drive.', 'wpmudev-plugin-test'));
+			setIsEditing(false);
 			onSave();
 		} catch (err) {
 			setError(err.message || __('Failed to save credentials. Please check your Google Cloud Console configuration.', 'wpmudev-plugin-test'));
@@ -69,6 +90,20 @@ const CredentialsForm = ({ onSave, isLoading, hasCredentials }) => {
 			setClientSecret('');
 			setError('');
 			setSuccess('');
+			setIsEditing(true);
+		}
+	};
+
+	const handleEditCredentials = () => {
+		setIsEditing(true);
+		setClientSecret(''); // Clear the masked secret for editing
+	};
+
+	const handleCancelEdit = () => {
+		setIsEditing(false);
+		// Reload the saved credentials
+		if (hasCredentials) {
+			setClientSecret('****');
 		}
 	};
 
@@ -81,10 +116,20 @@ const CredentialsForm = ({ onSave, isLoading, hasCredentials }) => {
 						{__('Google Drive Credentials', 'wpmudev-plugin-test')}
 					</h3>
 					<div className="sui-box-actions">
-						{hasCredentials && (
+						{hasCredentials && !isEditing && (
 							<span className="sui-tag sui-tag-success">
 								{__('Configured', 'wpmudev-plugin-test')}
 							</span>
+						)}
+						{hasCredentials && !isEditing && (
+							<button
+								type="button"
+								className="sui-button sui-button-ghost sui-button-sm"
+								onClick={handleEditCredentials}
+							>
+								<span className="sui-icon-pencil" aria-hidden="true"></span>
+								{__('Edit', 'wpmudev-plugin-test')}
+							</button>
 						)}
 						<button
 							type="button"
@@ -142,89 +187,121 @@ const CredentialsForm = ({ onSave, isLoading, hasCredentials }) => {
 							</div>
 						</div>
 					)}
-					<form onSubmit={handleSubmit} className="credentials-form__form">
-						<div className="sui-form-field">
-							<label className="sui-label" htmlFor="client-id">
-								{__('Client ID', 'wpmudev-plugin-test')}
-								<span className="sui-label-required">*</span>
-							</label>
-							<input
-								id="client-id"
-								type="text"
-								className={`sui-form-control ${clientId && !validateClientId(clientId) ? 'sui-form-control-error' : ''}`}
-								value={clientId}
-								onChange={(e) => setClientId(e.target.value)}
-								placeholder={__('e.g., 123456789-abcdefghijklmnop.apps.googleusercontent.com', 'wpmudev-plugin-test')}
-								required
-							/>
-							<span className="sui-description">
-								{__('Get this from Google Cloud Console → APIs & Services → Credentials', 'wpmudev-plugin-test')}
-							</span>
-							{clientId && !validateClientId(clientId) && (
-								<span className="sui-description sui-description-error">
-									{__('Client ID should end with .apps.googleusercontent.com', 'wpmudev-plugin-test')}
-								</span>
-							)}
-						</div>
-						<div className="sui-form-field">
-							<label className="sui-label" htmlFor="client-secret">
-								{__('Client Secret', 'wpmudev-plugin-test')}
-								<span className="sui-label-required">*</span>
-							</label>
-							<div className="sui-form-control-with-icon">
+					{isEditing ? (
+						<form onSubmit={handleSubmit} className="credentials-form__form">
+							<div className="sui-form-field">
+								<label className="sui-label" htmlFor="client-id">
+									{__('Client ID', 'wpmudev-plugin-test')}
+									<span className="sui-label-required">*</span>
+								</label>
 								<input
-									id="client-secret"
-									type="password"
-									className={`sui-form-control ${clientSecret && clientSecret.length < 20 ? 'sui-form-control-error' : ''}`}
-									value={clientSecret}
-									onChange={(e) => setClientSecret(e.target.value)}
-									placeholder={__('Enter your Google Client Secret', 'wpmudev-plugin-test')}
+									id="client-id"
+									type="text"
+									className={`sui-form-control ${clientId && !validateClientId(clientId) ? 'sui-form-control-error' : ''}`}
+									value={clientId}
+									onChange={(e) => setClientId(e.target.value)}
+									placeholder={__('e.g., 123456789-abcdefghijklmnop.apps.googleusercontent.com', 'wpmudev-plugin-test')}
 									required
 								/>
-								<span className="sui-icon-eye sui-icon-eye-hide" aria-hidden="true"></span>
-							</div>
-							<span className="sui-description">
-								{__('Keep this secure and private. Never share it publicly.', 'wpmudev-plugin-test')}
-							</span>
-							{clientSecret && clientSecret.length < 20 && (
-								<span className="sui-description sui-description-error">
-									{__('Client Secret appears to be too short', 'wpmudev-plugin-test')}
+								<span className="sui-description">
+									{__('Get this from Google Cloud Console → APIs & Services → Credentials', 'wpmudev-plugin-test')}
 								</span>
-							)}
-						</div>
-						<div className="sui-form-field sui-form-field-last">
-							<div className="sui-form-field-control">
-								<button
-									type="submit"
-									className="sui-button sui-button-blue"
-									disabled={isSaving || !clientId || !clientSecret || !validateClientId(clientId)}
-								>
-									{isSaving ? (
-										<>
-											<span className="sui-icon-loader sui-loading" aria-hidden="true"></span>
-											{__('Saving...', 'wpmudev-plugin-test')}
-										</>
-									) : (
-										<>
-											<span className="sui-icon-save" aria-hidden="true"></span>
-											{__('Save Credentials', 'wpmudev-plugin-test')}
-										</>
-									)}
-								</button>
-								{(clientId || clientSecret) && (
-									<button
-										type="button"
-										className="sui-button sui-button-ghost"
-										onClick={handleClearCredentials}
-										disabled={isSaving}
-									>
-										<span className="sui-icon-trash" aria-hidden="true"></span>
-										{__('Clear', 'wpmudev-plugin-test')}
-									</button>
+								{clientId && !validateClientId(clientId) && (
+									<span className="sui-description sui-description-error">
+										{__('Client ID should end with .apps.googleusercontent.com', 'wpmudev-plugin-test')}
+									</span>
 								)}
 							</div>
+							<div className="sui-form-field">
+								<label className="sui-label" htmlFor="client-secret">
+									{__('Client Secret', 'wpmudev-plugin-test')}
+									<span className="sui-label-required">*</span>
+								</label>
+								<div className="sui-form-control-with-icon">
+									<input
+										id="client-secret"
+										type="password"
+										className={`sui-form-control ${clientSecret && clientSecret.length < 20 ? 'sui-form-control-error' : ''}`}
+										value={clientSecret}
+										onChange={(e) => setClientSecret(e.target.value)}
+										placeholder={__('Enter your Google Client Secret', 'wpmudev-plugin-test')}
+										required
+									/>
+									<span className="sui-icon-eye sui-icon-eye-hide" aria-hidden="true"></span>
+								</div>
+								<span className="sui-description">
+									{__('Keep this secure and private. Never share it publicly.', 'wpmudev-plugin-test')}
+								</span>
+								{clientSecret && clientSecret.length < 20 && (
+									<span className="sui-description sui-description-error">
+										{__('Client Secret appears to be too short', 'wpmudev-plugin-test')}
+									</span>
+								)}
+							</div>
+							<div className="sui-form-field sui-form-field-last">
+								<div className="sui-form-field-control">
+									<button
+										type="submit"
+										className="sui-button sui-button-blue"
+										disabled={isSaving || !clientId || !clientSecret || !validateClientId(clientId)}
+									>
+										{isSaving ? (
+											<>
+												<span className="sui-icon-loader sui-loading" aria-hidden="true"></span>
+												{__('Saving...', 'wpmudev-plugin-test')}
+											</>
+										) : (
+											<>
+												<span className="sui-icon-save" aria-hidden="true"></span>
+												{__('Save Credentials', 'wpmudev-plugin-test')}
+											</>
+										)}
+									</button>
+									{hasCredentials && (
+										<button
+											type="button"
+											className="sui-button sui-button-ghost"
+											onClick={handleCancelEdit}
+											disabled={isSaving}
+										>
+											<span className="sui-icon-close" aria-hidden="true"></span>
+											{__('Cancel', 'wpmudev-plugin-test')}
+										</button>
+									)}
+									{(clientId || clientSecret) && (
+										<button
+											type="button"
+											className="sui-button sui-button-ghost"
+											onClick={handleClearCredentials}
+											disabled={isSaving}
+										>
+											<span className="sui-icon-trash" aria-hidden="true"></span>
+											{__('Clear', 'wpmudev-plugin-test')}
+										</button>
+									)}
+								</div>
+							</div>
+						</form>
+					) : (
+						<div className="credentials-form__display">
+							<div className="sui-form-field">
+								<label className="sui-label">
+									{__('Client ID', 'wpmudev-plugin-test')}
+								</label>
+								<div className="sui-form-control sui-form-control-display">
+									{clientId || __('Not set', 'wpmudev-plugin-test')}
+								</div>
+							</div>
+							<div className="sui-form-field">
+								<label className="sui-label">
+									{__('Client Secret', 'wpmudev-plugin-test')}
+								</label>
+								<div className="sui-form-control sui-form-control-display">
+									{clientSecret || __('Not set', 'wpmudev-plugin-test')}
+								</div>
+							</div>
 						</div>
-					</form>
+					)}
 				</div>
 			</div>
 		</div>

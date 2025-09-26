@@ -45,6 +45,9 @@ const GoogleDriveTestApp = () => {
 			const response = await apiFetch({
 				path: wpmudevDriveTest.restEndpointAuth,
 				method: 'POST',
+				data: {
+					_wpnonce: wpmudevDriveTest.nonce,
+				},
 			});
 
 			if (response.auth_url) {
@@ -90,6 +93,9 @@ const GoogleDriveTestApp = () => {
 			const response = await apiFetch({
 				path: wpmudevDriveTest.restEndpointDisconnect,
 				method: 'POST',
+				data: {
+					_wpnonce: wpmudevDriveTest.nonce,
+				},
 			});
 
 			if (response.success) {
