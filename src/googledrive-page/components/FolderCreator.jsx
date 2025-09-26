@@ -1,5 +1,5 @@
-import { useState } from '@wordpress/element';
 import { __ } from '@wordpress/i18n';
+import { useState } from '@wordpress/element';
 import apiFetch from '@wordpress/api-fetch';
 import '../scss/components/FolderCreator.scss';
 
@@ -69,12 +69,12 @@ const FolderCreator = ({ onCreateFolder, onFolderCreated }) => {
 							</div>
 						</div>
 					)}
-					
+
 					<div className="folder-creator__form">
 						<div className="folder-creator__icon">
 							<span className="sui-icon-folder" aria-hidden="true"></span>
 						</div>
-						
+
 						<div className="sui-form-field">
 							<label className="sui-label" htmlFor="folder-name">
 								{__('Folder Name', 'wpmudev-plugin-test')}
@@ -93,7 +93,7 @@ const FolderCreator = ({ onCreateFolder, onFolderCreated }) => {
 								{__('Choose a descriptive name for your new folder', 'wpmudev-plugin-test')}
 							</span>
 						</div>
-						
+
 						<div className="folder-creator__actions">
 							<button
 								className="sui-button sui-button-blue"

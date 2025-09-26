@@ -1,5 +1,5 @@
-import { useState } from '@wordpress/element';
 import { __ } from '@wordpress/i18n';
+import { useState } from '@wordpress/element';
 import apiFetch from '@wordpress/api-fetch';
 import '../scss/components/FileUpload.scss';
 
@@ -96,7 +96,7 @@ const FileUpload = ({ onUpload, onUploadComplete }) => {
 							</div>
 						</div>
 					)}
-					
+
 					<div className="file-upload__dropzone">
 						<input
 							id="file-input"
@@ -115,7 +115,7 @@ const FileUpload = ({ onUpload, onUploadComplete }) => {
 							</div>
 						</label>
 					</div>
-					
+
 					{file && (
 						<div className="file-upload__preview">
 							<div className="file-upload__file-info">
@@ -139,7 +139,7 @@ const FileUpload = ({ onUpload, onUploadComplete }) => {
 							</div>
 						</div>
 					)}
-					
+
 					{isUploading && (
 						<div className="file-upload__progress">
 							<div className="sui-progress">
@@ -153,7 +153,7 @@ const FileUpload = ({ onUpload, onUploadComplete }) => {
 							</div>
 						</div>
 					)}
-					
+
 					<div className="file-upload__actions">
 						<button
 							className="sui-button sui-button-blue"

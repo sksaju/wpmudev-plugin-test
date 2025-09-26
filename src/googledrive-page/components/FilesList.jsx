@@ -1,5 +1,5 @@
-import { useState, useEffect } from '@wordpress/element';
 import { __ } from '@wordpress/i18n';
+import { useState, useEffect } from '@wordpress/element';
 import apiFetch from '@wordpress/api-fetch';
 import FileItem from './FileItem';
 import Pagination from './Pagination';

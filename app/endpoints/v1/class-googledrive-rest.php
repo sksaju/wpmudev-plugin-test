@@ -286,8 +286,8 @@ class Drive_API extends Base {
 
 		if ( ! empty( $error ) ) {
 			$redirect_url = add_query_arg( array(
-				'page' => 'wpmudev-plugin-test-googledrive',
-				'google_auth' => 'error',
+				'page'          => 'wpmudev-plugin-test-googledrive',
+				'google_auth'   => 'error',
 				'error_message' => urlencode( $error ),
 			), admin_url( 'admin.php' ) );
 			wp_redirect( $redirect_url );
@@ -297,8 +297,8 @@ class Drive_API extends Base {
 		$stored_state = get_transient( 'wpmudev_drive_auth_state' );
 		if ( $state !== $stored_state ) {
 			$redirect_url = add_query_arg( array(
-				'page' => 'wpmudev-plugin-test-googledrive',
-				'google_auth' => 'error',
+				'page'          => 'wpmudev-plugin-test-googledrive',
+				'google_auth'   => 'error',
 				'error_message' => urlencode( __( 'Invalid state parameter', 'wpmudev-plugin-test' ) ),
 			), admin_url( 'admin.php' ) );
 			wp_redirect( $redirect_url );
@@ -307,8 +307,8 @@ class Drive_API extends Base {
 
 		if ( empty( $code ) ) {
 			$redirect_url = add_query_arg( array(
-				'page' => 'wpmudev-plugin-test-googledrive',
-				'google_auth' => 'error',
+				'page'          => 'wpmudev-plugin-test-googledrive',
+				'google_auth'   => 'error',
 				'error_message' => urlencode( __( 'No authorization code received', 'wpmudev-plugin-test' ) ),
 			), admin_url( 'admin.php' ) );
 			wp_redirect( $redirect_url );
@@ -331,8 +331,8 @@ class Drive_API extends Base {
 
 		if ( is_wp_error( $token_response ) ) {
 			$redirect_url = add_query_arg( array(
-				'page' => 'wpmudev-plugin-test-googledrive',
-				'google_auth' => 'error',
+				'page'          => 'wpmudev-plugin-test-googledrive',
+				'google_auth'   => 'error',
 				'error_message' => urlencode( $token_response->get_error_message() ),
 			), admin_url( 'admin.php' ) );
 			wp_redirect( $redirect_url );
@@ -343,8 +343,8 @@ class Drive_API extends Base {
 
 		if ( isset( $token_data['error'] ) ) {
 			$redirect_url = add_query_arg( array(
-				'page' => 'wpmudev-plugin-test-googledrive',
-				'google_auth' => 'error',
+				'page'          => 'wpmudev-plugin-test-googledrive',
+				'google_auth'   => 'error',
 				'error_message' => urlencode( $token_data['error_description'] ?? $token_data['error'] ),
 			), admin_url( 'admin.php' ) );
 			wp_redirect( $redirect_url );
@@ -363,7 +363,7 @@ class Drive_API extends Base {
 
 		// Redirect back to admin page with success message
 		$redirect_url = add_query_arg( array(
-			'page' => 'wpmudev-plugin-test-googledrive',
+			'page'        => 'wpmudev-plugin-test-googledrive',
 			'google_auth' => 'success',
 		), admin_url( 'admin.php' ) );
 
@@ -445,7 +445,7 @@ class Drive_API extends Base {
 			$response = wp_remote_get( add_query_arg( $params, $url ), array(
 				'headers' => array(
 					'Authorization' => 'Bearer ' . get_option( 'wpmudev_drive_access_token' ),
-					'User-Agent' => 'WordPress/' . get_bloginfo( 'version' ) . '; ' . home_url(),
+					'User-Agent'    => 'WordPress/' . get_bloginfo( 'version' ) . '; ' . home_url(),
 				),
 				'timeout' => 30,
 			) );
@@ -510,7 +510,7 @@ class Drive_API extends Base {
 				'headers' => array(
 					'Authorization' => 'Bearer ' . get_option( 'wpmudev_drive_access_token' ),
 					'Content-Type'  => "multipart/related; boundary={$boundary}",
-					'User-Agent' => 'WordPress/' . get_bloginfo( 'version' ) . '; ' . home_url(),
+					'User-Agent'    => 'WordPress/' . get_bloginfo( 'version' ) . '; ' . home_url(),
 				),
 				'body' => $body,
 				'timeout' => 60,
@@ -615,7 +615,7 @@ class Drive_API extends Base {
 				'headers' => array(
 					'Authorization' => 'Bearer ' . get_option( 'wpmudev_drive_access_token' ),
 					'Content-Type'  => 'application/json',
-					'User-Agent' => 'WordPress/' . get_bloginfo( 'version' ) . '; ' . home_url(),
+					'User-Agent'    => 'WordPress/' . get_bloginfo( 'version' ) . '; ' . home_url(),
 				),
 				'body' => json_encode( $metadata ),
 				'timeout' => 30,

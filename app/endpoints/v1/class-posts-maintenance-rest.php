@@ -1,12 +1,25 @@
 <?php
-namespace WPMUDEV\PluginTest\Endpoints\V1;
+/**
+ * Posts Maintenance API endpoints.
+ *
+ * @link          https://wpmudev.com/
+ * @since         1.0.0
+ *
+ * @author        WPMUDEV (https://wpmudev.com)
+ * @package       WPMUDEV\PluginTest
+ *
+ * @copyright (c) 2025, Incsub (http://incsub.com)
+ */
+
+ namespace WPMUDEV\PluginTest\Endpoints\V1;
+
+ // Abort if called directly.
+ defined( 'WPINC' ) || die;
 
 use WPMUDEV\PluginTest\Base;
 use WPMUDEV\PluginTest\App\Services\Posts_Maintenance;
 use WP_REST_Request;
 use WP_REST_Response;
-
-defined( 'WPINC' ) || die;
 
 class Posts_Maintenance_API extends Base {
 	public function init() {

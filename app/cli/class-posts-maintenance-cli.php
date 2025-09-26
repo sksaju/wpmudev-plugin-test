@@ -1,9 +1,22 @@
 <?php
+/**
+ * Posts Maintenance CLI.
+ *
+ * @link          https://wpmudev.com/
+ * @since         1.0.0
+ *
+ * @author        WPMUDEV (https://wpmudev.com)
+ * @package       WPMUDEV\PluginTest
+ *
+ * @copyright (c) 2025, Incsub (http://incsub.com)
+ */
+
 namespace WPMUDEV\PluginTest\App\CLI;
 
 use WPMUDEV\PluginTest\Base;
 use WPMUDEV\PluginTest\App\Services\Posts_Maintenance;
 
+// Abort if called directly.
 defined( 'WPINC' ) || die;
 
 class Posts_Maintenance_CLI extends Base {

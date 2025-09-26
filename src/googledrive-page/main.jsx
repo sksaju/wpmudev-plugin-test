@@ -75,7 +75,7 @@ const GoogleDriveTestApp = () => {
 				link.href = response.download_url;
 				link.download = response.filename || 'download';
 				link.style.display = 'none';
-				
+
 				// Add authorization header by creating a fetch request
 				fetch(response.download_url, {
 					headers: {

@@ -1,6 +1,5 @@
-import { useState } from '@wordpress/element';
 import { __ } from '@wordpress/i18n';
-import apiFetch from '@wordpress/api-fetch';
+import { useState } from '@wordpress/element';
 import '../scss/components/FileItem.scss';
 
 const FileItem = ({ file, onDownload }) => {

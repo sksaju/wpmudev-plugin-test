@@ -1,6 +1,6 @@
 <?php
 /**
- * Google Drive test block.
+ * Google Drive Settings.
  *
  * @link          https://wpmudev.com/
  * @since         1.0.0
@@ -141,20 +141,20 @@ class Google_Drive extends Base {
 			'ver'       => $this->assets_version,
 			'strategy'  => true,
 			'localize'  => array(
-				'dom_element_id'         => $this->unique_id,
-				'restEndpointSave'       => 'wpmudev/v1/drive/save-credentials',
-				'restEndpointGet'        => 'wpmudev/v1/drive/get-credentials',
-				'restEndpointAuth'       => 'wpmudev/v1/drive/auth',
-				'restEndpointDisconnect' => 'wpmudev/v1/drive/disconnect',
-				'restEndpointFiles'      => 'wpmudev/v1/drive/files',
-				'restEndpointUpload'     => 'wpmudev/v1/drive/upload',
+				'dom_element_id'          => $this->unique_id,
+				'restEndpointSave'        => 'wpmudev/v1/drive/save-credentials',
+				'restEndpointGet'         => 'wpmudev/v1/drive/get-credentials',
+				'restEndpointAuth'        => 'wpmudev/v1/drive/auth',
+				'restEndpointDisconnect'  => 'wpmudev/v1/drive/disconnect',
+				'restEndpointFiles'       => 'wpmudev/v1/drive/files',
+				'restEndpointUpload'      => 'wpmudev/v1/drive/upload',
 				'restEndpointDownloadUrl' => 'wpmudev/v1/drive/download-url',
-				'restEndpointCreate'     => 'wpmudev/v1/drive/create-folder',
-				'nonce'                  => wp_create_nonce( 'wp_rest' ),
-				'authStatus'             => $this->get_auth_status(),
-				'redirectUri'            => home_url( '/wp-json/wpmudev/v1/drive/callback' ),
-				'hasCredentials'         => ! empty( $this->creds['client_id'] ) && ! empty( $this->creds['client_secret'] ),
-				'i18n'                   => array(
+				'restEndpointCreate'      => 'wpmudev/v1/drive/create-folder',
+				'nonce'                   => wp_create_nonce( 'wp_rest' ),
+				'authStatus'              => $this->get_auth_status(),
+				'redirectUri'             => home_url( '/wp-json/wpmudev/v1/drive/callback' ),
+				'hasCredentials'          => ! empty( $this->creds['client_id'] ) && ! empty( $this->creds['client_secret'] ),
+				'i18n'                    => array(
 					'title' => __( 'Google Drive Test', 'wpmudev-plugin-test' ),
 				),
 			),

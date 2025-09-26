@@ -25,7 +25,7 @@ const Pagination = ({
 					</p>
 				)}
 			</div>
-			
+
 			{hasNextPage && (
 				<div className="pagination__actions">
 					<button

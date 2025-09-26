@@ -2,14 +2,21 @@
 /**
  * Posts Maintenance service: scan posts/pages and update meta.
  *
- * @package WPMUDEV\PluginTest
+ * @link          https://wpmudev.com/
+ * @since         1.0.0
+ *
+ * @author        WPMUDEV (https://wpmudev.com)
+ * @package       WPMUDEV\PluginTest
+ *
+ * @copyright (c) 2025, Incsub (http://incsub.com)
  */
 
 namespace WPMUDEV\PluginTest\App\Services;
 
-use WPMUDEV\PluginTest\Base;
-
+// Abort if called directly.
 defined( 'WPINC' ) || die;
+
+use WPMUDEV\PluginTest\Base;
 
 class Posts_Maintenance extends Base {
     /**

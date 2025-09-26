@@ -3,31 +3,31 @@
 		text-align: center;
 		padding: 40px 20px;
 	}
-	
+
 	&__spinner {
 		margin-bottom: 16px;
-		
+
 		.sui-icon-loader {
 			font-size: 32px;
 			color: #0073aa;
 			animation: spin 1s linear infinite;
 		}
 	}
-	
+
 	&__empty {
 		text-align: center;
 		padding: 40px 20px;
 	}
-	
+
 	&__empty-icon {
 		margin-bottom: 20px;
-		
+
 		.sui-icon-cloud {
 			font-size: 48px;
 			color: #ccc;
 		}
 	}
-	
+
 	&__empty-content {
 		h4 {
 			margin: 0 0 12px 0;
@@ -35,7 +35,7 @@
 			font-weight: 600;
 			color: #333;
 		}
-		
+
 		p {
 			margin: 0;
 			color: #666;
@@ -43,14 +43,14 @@
 			line-height: 1.5;
 		}
 	}
-	
+
 	&__content {
 		.files-list__header {
 			margin-bottom: 20px;
 			padding-bottom: 12px;
 			border-bottom: 1px solid #e1e5e9;
 		}
-		
+
 		.files-list__count {
 			margin: 0;
 			font-size: 14px;
@@ -58,11 +58,11 @@
 			font-weight: 500;
 		}
 	}
-	
+
 	&__items {
 		// File items will be styled by FileItem component
 	}
-	
+
 	.sui-box-header {
 		.sui-box-title {
 			display: flex;
@@ -70,7 +70,7 @@
 			gap: 8px;
 			margin: 0;
 		}
-		
+
 		.sui-button {
 			padding: 8px 12px;
 			font-size: 12px;
@@ -80,17 +80,17 @@
 			display: inline-flex;
 			align-items: center;
 			gap: 6px;
-			
+
 			&:hover {
 				transform: translateY(-1px);
 			}
-			
+
 			&:disabled {
 				opacity: 0.6;
 				cursor: not-allowed;
 				transform: none;
 			}
-			
+
 			.sui-icon-loader {
 				animation: spin 1s linear infinite;
 			}
@@ -99,6 +99,11 @@
 }
 
 @keyframes spin {
-	0% { transform: rotate(0deg); }
-	100% { transform: rotate(360deg); }
+	0% {
+		transform: rotate(0deg);
+	}
+
+	100% {
+		transform: rotate(360deg);
+	}
 }

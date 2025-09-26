@@ -1,10 +1,23 @@
 <?php
-namespace WPMUDEV\PluginTest\App\Admin_Pages;
+/**
+ * Posts Maintenance.
+ *
+ * @link          https://wpmudev.com/
+ * @since         1.0.0
+ *
+ * @author        WPMUDEV (https://wpmudev.com)
+ * @package       WPMUDEV\PluginTest
+ *
+ * @copyright (c) 2025, Incsub (http://incsub.com)
+ */
+
+ namespace WPMUDEV\PluginTest\App\Admin_Pages;
+
+ // Abort if called directly.
+ defined( 'WPINC' ) || die;
 
 use WPMUDEV\PluginTest\Base;
 use WPMUDEV\PluginTest\App\Services\Posts_Maintenance;
-
-defined( 'WPINC' ) || die;
 
 class Posts_Maintenance_Page extends Base {
 	private $page_slug = 'wpmudev_plugintest_posts_maintenance';
@@ -52,4 +65,3 @@ class Posts_Maintenance_Page extends Base {
 		<?php
 	}
 }
-

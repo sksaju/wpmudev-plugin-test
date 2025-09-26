@@ -1,131 +1,68 @@
 module.exports = function (grunt) {
 	require('load-grunt-tasks')(grunt)
 
-	const copyFiles = [
+	const buildFiles = [
 		'app/**',
 		'core/**',
 		'languages/**',
-		'uninstall.php',
+		'assets/**',
 		'wpmudev-plugin-test.php',
-		'!vendor/**',
+		'uninstall.php',
+		'vendor/autoload.php',
+		'vendor/composer/**',
+		'vendor/google/apiclient/**',
+		'vendor/google/auth/**',
+		'vendor/guzzlehttp/**',
+		'vendor/monolog/**',
+		'vendor/paragonie/**',
+		'vendor/psr/**',
+		'vendor/ralouphie/**',
+		'vendor/symfony/**',
+		// Exclude development files
+		'!composer.json',
+		'!composer.lock',
+		'!vendor/google/apiclient-services/**',
+		'!vendor/dealerdirect/**',
+		'!vendor/firebase/**',
+		'!vendor/phpcompatibility/**',
+		'!vendor/phpcsstandards/**',
+		'!vendor/phpseclib/**',
+		'!vendor/squizlabs/**',
+		'!vendor/wp-coding-standards/**',
+		'!vendor/bin/**',
+		'!node_modules/**',
+		'!src/**',
+		'!tests/**',
+		'!*.md',
+		'!Gruntfile.js',
+		'!webpack.config.js',
+		'!phpcs.ruleset.xml',
+		'!phpunit.xml.dist',
+		'!gulpfile.js',
+		'!changelog.txt',
+		'!.babelrc',
 		'!**/*.map',
-		'QUESTIONS.md',
-		'README.md',
-		'composer.json',
-		'package.json',
-		'Gruntfile.js',
-		'gulpfile.js',
-		'webpack.config.js',
-		'phpcs.ruleset.xml',
-		'phpunit.xml.dist',
-		'src/**',
-		'tests/**',
 	]
-
-    const excludeCopyFilesPro = [
-        // Core plugin runtime files only
-        'app/**',
-        'core/**',
-        'languages/**',
-        'assets/**',
-        'wpmudev-plugin-test.php',
-        'uninstall.php',
-        'composer.json',
-        'composer.lock',
-        // Include only essential vendor files - exclude massive Google services
-        'vendor/autoload.php',
-        'vendor/composer/**',
-        'vendor/google/apiclient/**',
-        'vendor/google/auth/**',
-        'vendor/guzzlehttp/**',
-        'vendor/monolog/**',
-        'vendor/paragonie/**',
-        'vendor/psr/**',
-        'vendor/ralouphie/**',
-        'vendor/symfony/**',
-        // Exclude massive Google API services (121MB!) - we only need Drive
-        '!vendor/google/apiclient-services/**',
-        // Exclude all dev dependencies
-        '!vendor/dealerdirect/**',
-        '!vendor/firebase/**',
-        '!vendor/phpcompatibility/**',
-        '!vendor/phpcsstandards/**',
-        '!vendor/phpseclib/**',
-        '!vendor/squizlabs/**',
-        '!vendor/wp-coding-standards/**',
-        '!vendor/bin/**',
-        // Explicitly exclude development-related sources from final build
-        '!node_modules/**',
-        '!src/**',
-        '!tests/**',
-        '!*.md',
-        '!README.md',
-        '!QUESTIONS.md',
-        '!Gruntfile.js',
-        '!webpack.config.js',
-        '!phpcs.ruleset.xml',
-        '!phpunit.xml.dist',
-        '!gulpfile.js',
-        '!changelog.txt',
-        '!.babelrc',
-    ]
-
-	const changelog = grunt.file.read('.changelog')
 
 	grunt.initConfig({
 		pkg: grunt.file.readJSON('package.json'),
 
-		// Clean temp folders and release copies.
+		// Clean build directory
 		clean: {
-			temp: {
-				src: ['**/*.tmp', '**/.afpDeleted*', '**/.DS_Store'],
-				dot: true,
-				filter: 'isFile',
-			},
-			assets: ['assets/css/**', 'assets/js/**'],
-			folder_v2: ['build/**'],
+			build: ['build/**'],
 		},
 
-		checktextdomain: {
-			options: {
-				text_domain: 'wpmudev-plugin-test',
-				keywords: [
-					'__:1,2d',
-					'_e:1,2d',
-					'_x:1,2c,3d',
-					'esc_html__:1,2d',
-					'esc_html_e:1,2d',
-					'esc_html_x:1,2c,3d',
-					'esc_attr__:1,2d',
-					'esc_attr_e:1,2d',
-					'esc_attr_x:1,2c,3d',
-					'_ex:1,2c,3d',
-					'_n:1,2,4d',
-					'_nx:1,2,4c,5d',
-					'_n_noop:1,2,3d',
-					'_nx_noop:1,2,3c,4d',
-				],
-			},
-			files: {
-				src: [
-					'app/templates/**/*.php',
-					'core/**/*.php',
-					'!core/external/**', // Exclude external libs.
-					'google-analytics-async.php',
-				],
-				expand: true,
-			},
-		},
-
+		// Copy files for production build
 		copy: {
-			pro: {
-				src: excludeCopyFilesPro,
+			build: {
+				src: buildFiles,
 				dest: 'build/<%= pkg.name %>/',
 			},
 		},
 
+		// Create zip package
 		compress: {
-			pro: {
+			build: {
 				options: {
 					mode: 'zip',
 					archive: './build/<%= pkg.name %>-<%= pkg.version %>.zip',
@@ -136,29 +73,12 @@ module.exports = function (grunt) {
 				dest: '<%= pkg.name %>/',
 			},
 		},
-
 	})
 
-	grunt.loadNpmTasks('grunt-search')
-
-	grunt.registerTask('version-compare', ['search'])
-	grunt.registerTask('finish', function () {
-		const json = grunt.file.readJSON('package.json')
-		const file = './build/' + json.name + '-' + json.version + '.zip'
-		grunt.log.writeln('Process finished.')
-
-		grunt.log.writeln('----------')
-	})
-
+	// Main build task
 	grunt.registerTask('build', [
-		'checktextdomain',
-		'copy:pro',
-		'compress:pro',
-	])
-
-	grunt.registerTask('preBuildClean', [
-		'clean:temp',
-		'clean:assets',
-		'clean:folder_v2',
+		'clean:build',
+		'copy:build',
+		'compress:build',
 	])
 }

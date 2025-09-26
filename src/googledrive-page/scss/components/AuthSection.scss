@@ -1,29 +1,29 @@
 .auth-section {
 	&__success {
 		text-align: center;
-		
+
 		.sui-notice {
 			margin-bottom: 20px;
 		}
-		
+
 		.sui-description {
 			color: #666;
 			font-size: 14px;
 			line-height: 1.5;
 		}
 	}
-	
+
 	&__info {
 		.sui-description {
 			margin-bottom: 20px;
 		}
 	}
-	
+
 	&__actions {
 		display: flex;
 		justify-content: center;
 		gap: 12px;
-		
+
 		.sui-button {
 			padding: 8px 16px;
 			font-size: 12px;
@@ -33,45 +33,45 @@
 			display: inline-flex;
 			align-items: center;
 			gap: 6px;
-			
+
 			&.sui-button-ghost {
 				background: transparent;
 				border: 1px solid #ddd;
 				color: #666;
-				
+
 				&:hover:not(:disabled) {
 					background-color: #f8f9fa;
 					border-color: #999;
 					color: #333;
 				}
-				
+
 				&:disabled {
 					opacity: 0.6;
 					cursor: not-allowed;
 				}
 			}
-			
+
 			.sui-icon-loader {
 				animation: spin 1s linear infinite;
 			}
 		}
 	}
-	
+
 	&__auth {
 		text-align: center;
 		padding: 20px 0;
 	}
-	
+
 	&__icon {
 		margin-bottom: 20px;
-		
+
 		.sui-icon-cloud {
 			font-size: 48px;
 			color: #0073aa;
 			opacity: 0.8;
 		}
 	}
-	
+
 	&__content {
 		h4 {
 			margin: 0 0 12px 0;
@@ -79,14 +79,14 @@
 			font-weight: 600;
 			color: #333;
 		}
-		
+
 		.sui-description {
 			margin-bottom: 24px;
 			color: #666;
 			font-size: 14px;
 			line-height: 1.5;
 		}
-		
+
 		.sui-button {
 			padding: 16px 32px;
 			font-size: 16px;
@@ -96,24 +96,24 @@
 			display: inline-flex;
 			align-items: center;
 			gap: 10px;
-			
+
 			&:hover:not(:disabled) {
 				transform: translateY(-1px);
 				box-shadow: 0 4px 12px rgba(0, 115, 170, 0.3);
 			}
-			
+
 			&:disabled {
 				opacity: 0.6;
 				cursor: not-allowed;
 				transform: none;
 			}
-			
+
 			.sui-icon-loader {
 				animation: spin 1s linear infinite;
 			}
 		}
 	}
-	
+
 	.sui-box-header {
 		.sui-box-title {
 			display: flex;
@@ -121,14 +121,14 @@
 			gap: 8px;
 			margin: 0;
 		}
-		
+
 		.sui-tag {
 			font-size: 12px;
 			padding: 4px 8px;
 			border-radius: 12px;
 		}
 	}
-	
+
 	.sui-notice {
 		.sui-notice-message {
 			display: flex;
@@ -140,6 +140,11 @@
 }
 
 @keyframes spin {
-	0% { transform: rotate(0deg); }
-	100% { transform: rotate(360deg); }
+	0% {
+		transform: rotate(0deg);
+	}
+
+	100% {
+		transform: rotate(360deg);
+	}
 }
