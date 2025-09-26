@@ -51,7 +51,6 @@ const GoogleDriveTestApp = () => {
 			});
 
 			if (response.auth_url) {
-				// Direct redirect to Google OAuth - no popup
 				window.location.href = response.auth_url;
 			} else {
 				console.error('No auth URL received');
@@ -63,15 +62,40 @@ const GoogleDriveTestApp = () => {
 
 	const handleDownload = async (fileId) => {
 		try {
+			// Get the download URL from our backend
 			const response = await apiFetch({
-				path: `${wpmudevDriveTest.restEndpointDownload}?file_id=${fileId}`,
+				path: `${wpmudevDriveTest.restEndpointDownloadUrl}?file_id=${fileId}`,
 				method: 'GET',
 			});
 
-			if (response.download_url) {
-				window.open(response.download_url, '_blank');
+			if (response.success && response.download_url) {
+				// Create a temporary link with the Google Drive URL and access token
+				const link = document.createElement('a');
+				link.href = response.download_url;
+				link.download = response.filename || 'download';
+				link.style.display = 'none';
+				
+				// Add authorization header by creating a fetch request
+				fetch(response.download_url, {
+					headers: {
+						'Authorization': `Bearer ${response.access_token}`
+					}
+				}).then(res => res.blob()).then(blob => {
+					const url = window.URL.createObjectURL(blob);
+					link.href = url;
+					document.body.appendChild(link);
+					link.click();
+					document.body.removeChild(link);
+					window.URL.revokeObjectURL(url);
+				}).catch(err => {
+					console.error('Download error:', err);
+					setError(__('Failed to download file', 'wpmudev-plugin-test'));
+				});
+			} else {
+				setError(__('Failed to get download URL', 'wpmudev-plugin-test'));
 			}
 		} catch (err) {
+			console.error('Download error:', err);
 			setError(err.message || __('Failed to download file', 'wpmudev-plugin-test'));
 		}
 	};

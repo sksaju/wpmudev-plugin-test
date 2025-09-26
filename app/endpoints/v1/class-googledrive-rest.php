@@ -125,10 +125,10 @@ class Drive_API extends Base {
 			},
 		) );
 
-		// Download file
-		register_rest_route( 'wpmudev/v1/drive', '/download', array(
+		// Get download URL
+		register_rest_route( 'wpmudev/v1/drive', '/download-url', array(
 			'methods'             => 'GET',
-			'callback'            => array( $this, 'download_file' ),
+			'callback'            => array( $this, 'get_download_url' ),
 			'permission_callback' => function () {
 				return current_user_can( 'manage_options' );
 			},
@@ -441,7 +441,9 @@ class Drive_API extends Base {
 			$response = wp_remote_get( add_query_arg( $params, $url ), array(
 				'headers' => array(
 					'Authorization' => 'Bearer ' . get_option( 'wpmudev_drive_access_token' ),
+					'User-Agent' => 'WordPress/' . get_bloginfo( 'version' ) . '; ' . home_url(),
 				),
+				'timeout' => 30,
 			) );
 
 			if ( is_wp_error( $response ) ) {
@@ -504,8 +506,10 @@ class Drive_API extends Base {
 				'headers' => array(
 					'Authorization' => 'Bearer ' . get_option( 'wpmudev_drive_access_token' ),
 					'Content-Type'  => "multipart/related; boundary={$boundary}",
+					'User-Agent' => 'WordPress/' . get_bloginfo( 'version' ) . '; ' . home_url(),
 				),
 				'body' => $body,
+				'timeout' => 60,
 			) );
 
 			if ( is_wp_error( $response ) ) {
@@ -531,42 +535,56 @@ class Drive_API extends Base {
 	}
 
 	/**
-	 * Download file from Google Drive.
+	 * Get download URL for a file from Google Drive.
 	 *
 	 * @param WP_REST_Request $request
 	 * @return WP_REST_Response|WP_Error
 	 */
-	public function download_file( WP_REST_Request $request ) {
+	public function get_download_url( WP_REST_Request $request ) {
+		// Check authentication first
 		if ( ! $this->ensure_valid_token() ) {
 			return new WP_Error( 'no_access_token', __( 'Not authenticated with Google Drive', 'wpmudev-plugin-test' ), array( 'status' => 401 ) );
 		}
 
 		$file_id = sanitize_text_field( $request->get_param( 'file_id' ) );
 
+		if ( empty( $file_id ) ) {
+			return new WP_Error( 'missing_file_id', __( 'File ID is required', 'wpmudev-plugin-test' ), array( 'status' => 400 ) );
+		}
+
 		try {
-			$response = wp_remote_get( "https://www.googleapis.com/drive/v3/files/{$file_id}?alt=media", array(
+			// Get file metadata to check if it exists and get filename
+			$metadata_response = wp_remote_get( "https://www.googleapis.com/drive/v3/files/{$file_id}", array(
 				'headers' => array(
 					'Authorization' => 'Bearer ' . get_option( 'wpmudev_drive_access_token' ),
 				),
+				'timeout' => 30,
 			) );
 
-			if ( is_wp_error( $response ) ) {
-				return new WP_Error( 'download_error', $response->get_error_message(), array( 'status' => 500 ) );
+			if ( is_wp_error( $metadata_response ) ) {
+				return new WP_Error( 'metadata_error', __( 'Failed to get file metadata', 'wpmudev-plugin-test' ), array( 'status' => 500 ) );
 			}
 
-			$headers = wp_remote_retrieve_headers( $response );
-			$body = wp_remote_retrieve_body( $response );
+			$metadata = json_decode( wp_remote_retrieve_body( $metadata_response ), true );
 
-			// For now, return a download URL instead of the actual file content
-			// In a real implementation, you might want to stream the file
-			$download_url = "https://www.googleapis.com/drive/v3/files/{$file_id}?alt=media&access_token=" . get_option( 'wpmudev_drive_access_token' );
+			if ( isset( $metadata['error'] ) ) {
+				return new WP_Error( 'api_error', __( 'Google Drive API error: ', 'wpmudev-plugin-test' ) . $metadata['error']['message'], array( 'status' => 500 ) );
+			}
 
+			$filename = $metadata['name'] ?? 'download';
+			
+			// Return the direct Google Drive download URL
+			$download_url = "https://www.googleapis.com/drive/v3/files/{$file_id}?alt=media";
+			
 			return new WP_REST_Response( array(
+				'success'      => true,
 				'download_url' => $download_url,
+				'filename'     => $filename,
+				'access_token' => get_option( 'wpmudev_drive_access_token' ),
 			) );
 
 		} catch ( Exception $e ) {
-			return new WP_Error( 'download_error', $e->getMessage(), array( 'status' => 500 ) );
+			return new WP_Error( 'download_error', __( 'Error getting download URL: ', 'wpmudev-plugin-test' ) . $e->getMessage(), array( 'status' => 500 ) );
 		}
 	}
 
@@ -593,8 +611,10 @@ class Drive_API extends Base {
 				'headers' => array(
 					'Authorization' => 'Bearer ' . get_option( 'wpmudev_drive_access_token' ),
 					'Content-Type'  => 'application/json',
+					'User-Agent' => 'WordPress/' . get_bloginfo( 'version' ) . '; ' . home_url(),
 				),
 				'body' => json_encode( $metadata ),
+				'timeout' => 30,
 			) );
 
 			if ( is_wp_error( $response ) ) {

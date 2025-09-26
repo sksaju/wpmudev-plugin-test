@@ -148,7 +148,7 @@ class Google_Drive extends Base {
 				'restEndpointDisconnect' => 'wpmudev/v1/drive/disconnect',
 				'restEndpointFiles'      => 'wpmudev/v1/drive/files',
 				'restEndpointUpload'     => 'wpmudev/v1/drive/upload',
-				'restEndpointDownload'   => 'wpmudev/v1/drive/download',
+				'restEndpointDownloadUrl' => 'wpmudev/v1/drive/download-url',
 				'restEndpointCreate'     => 'wpmudev/v1/drive/create-folder',
 				'nonce'                  => wp_create_nonce( 'wp_rest' ),
 				'authStatus'             => $this->get_auth_status(),
