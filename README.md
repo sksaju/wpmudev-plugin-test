@@ -8,6 +8,17 @@ This is a plugin that can be used for testing coding skills for WordPress and PH
 Install composer packages
 `composer install`
 
+## Run Tests
+
+### Quick Setup
+```bash
+# One-time setup
+bash bin/install-wp-tests.sh
+
+# Run tests
+vendor/bin/phpunit
+```
+
 ## Build Tasks (npm)
 Everything should be handled by npm.
 

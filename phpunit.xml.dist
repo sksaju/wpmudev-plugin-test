@@ -7,10 +7,12 @@
 	convertNoticesToExceptions="true"
 	convertWarningsToExceptions="true"
 	>
-	<testsuites>
+    <php>
+        <const name="WPMUDEV_PLUGIN_TEST" value="1" />
+    </php>
+    <testsuites>
 		<testsuite name="testing">
 			<directory prefix="test-" suffix=".php">./tests/</directory>
-			<exclude>./tests/test-sample.php</exclude>
 		</testsuite>
 	</testsuites>
 </phpunit>
